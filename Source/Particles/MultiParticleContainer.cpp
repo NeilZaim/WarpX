@@ -277,6 +277,7 @@ MultiParticleContainer::ReadParameters ()
 #endif
             ppq.query("threshold_poisson_gaussian",
                       m_qed_schwinger_threshold_poisson_gaussian);
+            ppq.query("multiply_factor", m_qed_schwinger_multiply_factor);
         }
 #endif
         initialized = true;
@@ -1105,7 +1106,8 @@ MultiParticleContainer::doQEDSchwinger ()
         const auto np_pos_dst = dst_pos_tile.numParticles();
 
         const auto Filter  = SchwingerFilterFunc{
-                              m_qed_schwinger_threshold_poisson_gaussian,dVdt};
+                              m_qed_schwinger_threshold_poisson_gaussian,dVdt,
+                              m_qed_schwinger_multiply_factor};
 
         const SmartCreateFactory create_factory_ele(*pc_product_ele);
         const SmartCreateFactory create_factory_pos(*pc_product_pos);
@@ -1122,6 +1124,11 @@ MultiParticleContainer::doQEDSchwinger ()
 
         setNewParticleIDs(dst_ele_tile, np_ele_dst, num_added);
         setNewParticleIDs(dst_pos_tile, np_pos_dst, num_added);
+
+        if (num_added == 1){
+            amrex::Print() << "Schwinger pair created. Deactivating Schwinger process.\n";
+            m_do_qed_schwinger = 0;
+        }
 
     }
 }

@@ -38,7 +38,8 @@ AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE amrex::Real
 getSchwingerProductionNumber (const amrex::Real dVdt,
               const amrex::Real Ex, const amrex::Real Ey, const amrex::Real Ez,
               const amrex::Real Bx, const amrex::Real By, const amrex::Real Bz,
-              const amrex::Real PoissonToGaussianThreshold)
+              const amrex::Real PoissonToGaussianThreshold,
+              const amrex::Real MultiplyFactor)
 {
     using namespace amrex;
     using namespace picsar::multi_physics;
@@ -47,7 +48,7 @@ getSchwingerProductionNumber (const amrex::Real dVdt,
     // However, a "lambda" parameter must still be passed to some functions.
     const auto dummy_lambda = 1._rt;
 
-    const auto expectedPairNumber =   dVdt *
+    const auto expectedPairNumber =   dVdt * MultiplyFactor *
         schwinger_pair_engine<Real,QedUtils::DummyStruct>::
         internal_compute_schwinger_pair_production_rate(
             Ex, Ey, Ez, Bx, By, Bz, dummy_lambda);

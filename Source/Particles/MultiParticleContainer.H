@@ -348,6 +348,8 @@ protected:
      */
     int m_qed_schwinger_threshold_poisson_gaussian = 25;
 
+    amrex::Real m_qed_schwinger_multiply_factor = 1;
+
 #endif
 
 private:

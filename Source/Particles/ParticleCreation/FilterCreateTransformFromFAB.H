@@ -77,7 +77,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
 
     Gpu::streamSynchronize();
 
-    const Index num_added = N*(last_mask + last_offset);
+    const Index num_added = std::min(N*(last_mask + last_offset),N);
     dst1.resize(std::max(dst1_index + num_added, dst1.numParticles()));
     dst2.resize(std::max(dst2_index + num_added, dst2.numParticles()));
 
@@ -91,7 +91,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
     // created particles.
     AMREX_HOST_DEVICE_FOR_1D( ncells, i,
     {
-        if (mask[i])
+        if ((mask[i]) && (p_offsets[i]==0))
         {
             const IntVect iv = box.atOffset(i);
             const int j = iv[0];
@@ -114,7 +114,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
                 create2(dst2_data, N*p_offsets[i] + dst2_index + n, x, y, z);
             }
             transform(dst1_data, dst2_data, N*p_offsets[i] + dst1_index,
-                    N*p_offsets[i] + dst2_index, N, arrNumPartCreation(j,k,l));
+                    N*p_offsets[i] + dst2_index, N, 1);
         }
     });
 

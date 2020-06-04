@@ -1,8 +1,8 @@
 #################################
 ####### GENERAL PARAMETERS ######
 #################################
-max_step = 1
-amr.n_cell =  8 8 32
+max_step = 5
+amr.n_cell =  8 8 8
 amr.max_grid_size = 16   # maximum size of each AMReX box, used to decompose the domain
 amr.blocking_factor = 8 # minimum size of each AMReX box, used to decompose the domain
 geometry.coord_sys   = 0                  # 0: Cartesian
@@ -33,7 +33,7 @@ warpx.serialize_ics = 1
 warpx.B_ext_grid_init_style = "constant"
 warpx.E_ext_grid_init_style = "constant"
 warpx.B_external_grid = 0. 0. 0.
-warpx.E_external_grid = 0. 0. 0.
+warpx.E_external_grid = 1.e18 0. 0.
 
 #################################
 ############ PLASMA #############
@@ -60,6 +60,7 @@ pos_schwinger.momentum_distribution_type = "gaussian"
 warpx.do_qed_schwinger = 1
 qed_schwinger.ele_product_species = ele_schwinger
 qed_schwinger.pos_product_species = pos_schwinger
+qed_schwinger.multiply_factor = 1e150
 
 #################################
 ########## DIAGNOSTICS ##########

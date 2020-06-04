@@ -18,6 +18,7 @@ struct SchwingerFilterFunc
 {
     const int m_threshold_poisson_gaussian;
     const amrex::Real m_dVdt;
+    const amrex::Real m_qed_schwinger_multiply_factor;
 
     /** Get the number of created pairs in a given cell at a given timestep.
      *
@@ -43,7 +44,8 @@ struct SchwingerFilterFunc
         return getSchwingerProductionNumber( m_dVdt,
                     arrEx(i,j,k),arrEy(i,j,k),arrEz(i,j,k),
                     arrBx(i,j,k),arrBy(i,j,k),arrBz(i,j,k),
-                    m_threshold_poisson_gaussian);
+                    m_threshold_poisson_gaussian,
+                    m_qed_schwinger_multiply_factor);
     }
 };
 
