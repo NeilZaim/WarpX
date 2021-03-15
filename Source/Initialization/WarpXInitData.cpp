@@ -306,6 +306,8 @@ WarpX::InitLevelData (int lev, Real /*time*/)
         if (lev == 0) {
             Bfield_aux[lev][i]->setVal(0.0);
             Efield_aux[lev][i]->setVal(0.0);
+            Bfield_future[lev][i]->setVal(0.0);
+            Efield_future[lev][i]->setVal(0.0);
             if (fft_do_time_averaging) {
                 Bfield_avg_aux[lev][i]->setVal(0.0);
                 Efield_avg_aux[lev][i]->setVal(0.0);
@@ -314,6 +316,7 @@ WarpX::InitLevelData (int lev, Real /*time*/)
 
         if (B_ext_grid_s == "constant" || B_ext_grid_s == "default") {
            Bfield_fp[lev][i]->setVal(B_external_grid[i]);
+           Bfield_future[lev][i]->setVal(B_external_grid[i]);
            if (fft_do_time_averaging) {
                 Bfield_avg_fp[lev][i]->setVal(B_external_grid[i]);
            }
@@ -329,6 +332,7 @@ WarpX::InitLevelData (int lev, Real /*time*/)
         }
         if (E_ext_grid_s == "constant" || E_ext_grid_s == "default") {
            Efield_fp[lev][i]->setVal(E_external_grid[i]);
+           Efield_future[lev][i]->setVal(E_external_grid[i]);
            if (fft_do_time_averaging) {
                Efield_avg_fp[lev][i]->setVal(E_external_grid[i]);
             }

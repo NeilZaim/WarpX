@@ -95,6 +95,8 @@ public:
     void Evolve (int lev,
                  const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
                  const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz,
+                 const amrex::MultiFab& Ex_future, const amrex::MultiFab& Ey_future, const amrex::MultiFab& Ez_future,
+                 const amrex::MultiFab& Bx_future, const amrex::MultiFab& By_future, const amrex::MultiFab& Bz_future,
                  const amrex::MultiFab& Ex_avg, const amrex::MultiFab& Ey_avg, const amrex::MultiFab& Ez_avg,
                  const amrex::MultiFab& Bx_avg, const amrex::MultiFab& By_avg, const amrex::MultiFab& Bz_avg,
                  amrex::MultiFab& jx,  amrex::MultiFab& jy, amrex::MultiFab& jz,

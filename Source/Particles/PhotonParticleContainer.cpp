@@ -193,6 +193,8 @@ void
 PhotonParticleContainer::Evolve (int lev,
                                  const MultiFab& Ex, const MultiFab& Ey, const MultiFab& Ez,
                                  const MultiFab& Bx, const MultiFab& By, const MultiFab& Bz,
+                                 const MultiFab& Ex_future, const MultiFab& Ey_future, const MultiFab& Ez_future,
+                                 const MultiFab& Bx_future, const MultiFab& By_future, const MultiFab& Bz_future,
                                  const MultiFab& Ex_avg, const MultiFab& Ey_avg, const MultiFab& Ez_avg,
                                  const MultiFab& Bx_avg, const MultiFab& By_avg, const MultiFab& Bz_avg,
                                  MultiFab& jx, MultiFab& jy, MultiFab& jz,
@@ -205,6 +207,8 @@ PhotonParticleContainer::Evolve (int lev,
     // This does gather, push and depose.
     // Push and depose have been re-written for photons
     PhysicalParticleContainer::Evolve (lev,
+                                       Ex, Ey, Ez,
+                                       Bx, By, Bz,
                                        Ex, Ey, Ez,
                                        Bx, By, Bz,
                                        Ex_avg, Ey_avg, Ez_avg,

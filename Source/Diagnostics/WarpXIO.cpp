@@ -164,6 +164,8 @@ WarpX::InitFromCheckpoint ()
             current_fp[lev][i]->setVal(0.0);
             Efield_fp[lev][i]->setVal(0.0);
             Bfield_fp[lev][i]->setVal(0.0);
+            Efield_future[lev][i]->setVal(0.0);
+            Bfield_future[lev][i]->setVal(0.0);
         }
 
         if (lev > 0) {

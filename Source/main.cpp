@@ -20,9 +20,13 @@
 #include <rocfft.h>
 #endif
 
+#include <fenv.h>
+
 int main(int argc, char* argv[])
 {
     using namespace amrex;
+
+ //   feenableexcept(FE_DIVBYZERO | FE_INVALID | FE_OVERFLOW);
 
     auto mpi_thread_levels = utils::warpx_mpi_init(argc, argv);
 

@@ -315,6 +315,8 @@ void
 MultiParticleContainer::Evolve (int lev,
                                 const MultiFab& Ex, const MultiFab& Ey, const MultiFab& Ez,
                                 const MultiFab& Bx, const MultiFab& By, const MultiFab& Bz,
+                                const MultiFab& Ex_future, const MultiFab& Ey_future, const MultiFab& Ez_future,
+                                const MultiFab& Bx_future, const MultiFab& By_future, const MultiFab& Bz_future,
                                 const MultiFab& Ex_avg, const MultiFab& Ey_avg, const MultiFab& Ez_avg,
                                 const MultiFab& Bx_avg, const MultiFab& By_avg, const MultiFab& Bz_avg,
                                 MultiFab& jx, MultiFab& jy, MultiFab& jz,
@@ -332,8 +334,10 @@ MultiParticleContainer::Evolve (int lev,
     if (cjz) cjz->setVal(0.0);
     if (rho) rho->setVal(0.0);
     if (crho) crho->setVal(0.0);
+    amrex::Print() << "Hello from MPC Evolve\n";
     for (auto& pc : allcontainers) {
-        pc->Evolve(lev, Ex, Ey, Ez, Bx, By, Bz, Ex_avg, Ey_avg, Ez_avg, Bx_avg, By_avg, Bz_avg, jx, jy, jz, cjx, cjy, cjz,
+        amrex::Print() << "Hello from MPC Evolve for loop\n";
+        pc->Evolve(lev, Ex, Ey, Ez, Bx, By, Bz, Ex_future, Ey_future, Ez_future, Bx_future, By_future, Bz_future, Ex_avg, Ey_avg, Ez_avg, Bx_avg, By_avg, Bz_avg, jx, jy, jz, cjx, cjy, cjz,
                    rho, crho, cEx, cEy, cEz, cBx, cBy, cBz, t, dt, a_dt_type);
     }
 }

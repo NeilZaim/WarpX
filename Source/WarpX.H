@@ -794,6 +794,8 @@ private:
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > current_fp;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Efield_fp;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Bfield_fp;
+    amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Efield_future;
+    amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Bfield_future;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Efield_avg_fp;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Bfield_avg_fp;
     // store fine patch
@@ -955,6 +957,9 @@ private:
     // void EvolvePSATD (int numsteps);
     void PushPSATD (amrex::Real dt);
     void PushPSATD (int lev, amrex::Real dt);
+public:
+    void PushFutureFields ();
+private:
 
     int fftw_plan_measure = 1; // used with PSATD
 
