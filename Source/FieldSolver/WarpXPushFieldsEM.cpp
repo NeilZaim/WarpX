@@ -164,21 +164,21 @@ WarpX::PushPSATD (int lev, amrex::Real /* dt */) {
 void
 WarpX::PushFutureFields () {
 
-    printf("HELLOBEFORECOPY\n");
+  //  printf("HELLOBEFORECOPY\n");
 
-    MultiFab::Copy(*Efield_future[0][0], *Efield_aux[0][0], 0, 0, 1, 0);
-    MultiFab::Copy(*Efield_future[0][1], *Efield_aux[0][1], 0, 0, 1, 0);
-    MultiFab::Copy(*Efield_future[0][2], *Efield_aux[0][2], 0, 0, 1, 0);
-    MultiFab::Copy(*Bfield_future[0][0], *Bfield_aux[0][0], 0, 0, 1, 0);
-    MultiFab::Copy(*Bfield_future[0][1], *Bfield_aux[0][1], 0, 0, 1, 0);
-    MultiFab::Copy(*Bfield_future[0][2], *Bfield_aux[0][2], 0, 0, 1, 0);
+    MultiFab::Copy(*Efield_future[0][0], *Efield_fp[0][0], 0, 0, 1, 0);
+    MultiFab::Copy(*Efield_future[0][1], *Efield_fp[0][1], 0, 0, 1, 0);
+    MultiFab::Copy(*Efield_future[0][2], *Efield_fp[0][2], 0, 0, 1, 0);
+    MultiFab::Copy(*Bfield_future[0][0], *Bfield_fp[0][0], 0, 0, 1, 0);
+    MultiFab::Copy(*Bfield_future[0][1], *Bfield_fp[0][1], 0, 0, 1, 0);
+    MultiFab::Copy(*Bfield_future[0][2], *Bfield_fp[0][2], 0, 0, 1, 0);
 
-    printf("HELLOAFTERCOPY\n");
+  //  printf("HELLOAFTERCOPY\n");
 
-//    PushPSATDSinglePatch( *spectral_solver_fp[0],
-//        Efield_future[0], Bfield_future[0], Efield_avg_fp[0], Bfield_avg_fp[0], current_fp[0], rho_fp[0] );
+    PushPSATDSinglePatch( *spectral_solver_fp[0],
+        Efield_future[0], Bfield_future[0], Efield_avg_fp[0], Bfield_avg_fp[0], current_fp[0], rho_fp[0] );
 
-    printf("HELLOAFTERPUSH\n");
+  //  printf("HELLOAFTERPUSH\n");
 }
 
 void

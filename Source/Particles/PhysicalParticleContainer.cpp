@@ -942,7 +942,7 @@ PhysicalParticleContainer::Evolve (int lev,
     WARPX_PROFILE("PhysicalParticleContainer::Evolve()");
     WARPX_PROFILE_VAR_NS("PhysicalParticleContainer::Evolve::GatherAndPush", blp_fg);
 
-    amrex::Print() << "Hello Before PPC.Evolve \n";
+    //amrex::Print() << "Hello Before PPC.Evolve \n";
 
     BL_ASSERT(OnSameGrids(lev,jx));
 
@@ -985,7 +985,7 @@ PhysicalParticleContainer::Evolve (int lev,
             {
                 amrex::Gpu::synchronize();
             }
-            amrex::Print() << "Hello Before PPC.Evolve ParIter\n";
+       //     amrex::Print() << "Hello Before PPC.Evolve ParIter\n";
             Real wt = amrex::second();
 
             const Box& box = pti.validbox();
@@ -1073,8 +1073,8 @@ PhysicalParticleContainer::Evolve (int lev,
                 //
                 // Gather and push for particles not in the buffer
                 //
-                amrex::Print() << "Hello Before PushPXImplicit \n";
-                amrex::Print() << "Species is " << species_name << ".\n";
+      //          amrex::Print() << "Hello Before PushPXImplicit \n";
+        //        amrex::Print() << "Species is " << species_name << ".\n";
                 WARPX_PROFILE_VAR_START(blp_fg);
                 PushPXImplicit(pti, exfab, eyfab, ezfab,
                        bxfab, byfab, bzfab, exfab_future, eyfab_future, ezfab_future,
@@ -1082,6 +1082,10 @@ PhysicalParticleContainer::Evolve (int lev,
                        Ex.nGrow(), e_is_nodal,
                        0, np_gather, lev, lev, dt, ScaleFields(false),
                        wp, uxp, uyp, uzp, jx, jy, jz, np_current, thread_num, a_dt_type);
+
+                jx.setVal(0.0);
+                jy.setVal(0.0);
+                jz.setVal(0.0);
 
                 if (np_gather < np)
                 {
@@ -2084,17 +2088,19 @@ AMREX_ALWAYS_ASSERT_WITH_MESSAGE((gather_lev==(lev-1)) ||
 
     MFIter::allowMultipleMFIters(true);
 
-    printf("ex_arr_future(0,0,0) before: %e \n", ex_arr_future(0,0,0));
-    printf("ez_arr_future(1,1,1) before: %e \n", ez_arr_future(1,1,0));
-    printf("ex_arr(0,0,0) before: %e \n", ex_arr(0,0,0));
-    printf("ez_arr(1,1,1) before: %e \n", ez_arr(1,1,0));
+    // printf("ex_arr_future(0,0,0) before: %e \n", ex_arr_future(0,0,0));
+    // printf("ez_arr_future(1,1,1) before: %e \n", ez_arr_future(1,1,0));
+    // printf("ex_arr(0,0,0) before: %e \n", ex_arr(0,0,0));
+    // printf("ez_arr(1,1,1) before: %e \n", ez_arr(1,1,0));
+
+    warpx.SyncCurrent();
 
     warpx.PushFutureFields();
 
-    printf("ex_arr_future(0,0,0) after: %e \n", ex_arr_future(0,0,0));
-    printf("ez_arr_future(1,1,1) after: %e \n", ez_arr_future(1,1,0));
-    printf("ex_arr(0,0,0) after: %e \n", ex_arr(0,0,0));
-    printf("ez_arr(1,1,1) after: %e \n", ez_arr(1,1,0));
+    // printf("ex_arr_future(0,0,0) after: %e \n", ex_arr_future(0,0,0));
+    // printf("ez_arr_future(1,1,1) after: %e \n", ez_arr_future(1,1,0));
+    // printf("ex_arr(0,0,0) after: %e \n", ex_arr(0,0,0));
+    // printf("ez_arr(1,1,1) after: %e \n", ez_arr(1,1,0));
 
     auto index = std::make_pair(pti.index(), pti.LocalTileIndex());
 
@@ -2167,7 +2173,9 @@ AMREX_ALWAYS_ASSERT_WITH_MESSAGE((gather_lev==(lev-1)) ||
 
         doParticlePush(getPosition, setPosition, copyAttribs, ip,
                        ux[ip+offset], uy[ip+offset], uz[ip+offset],
-                       0.5_rt*(Exp+Expold), 0.5_rt*(Eyp+Eypold), 0.5_rt*(Ezp+Ezpold), Bxp, Byp, Bzp,
+//                       0.5_rt*(Exp+Expold), 0.5_rt*(Eyp+Eypold), 0.5_rt*(Ezp+Ezpold), Bxpold, Bypold, Bzpold,
+                       0.5_rt*(Exp+Expold), 0.5_rt*(Eyp+Eypold), 0.5_rt*(Ezp+Ezpold), 0.5_rt*(Bxp+Bxpold), 0.5_rt*(Byp+Bypold), 0.5_rt*(Bzp+Bzpold),
+//                       Expold, Eypold, Ezpold, Bxpold, Bypold, Bzpold,
                        ion_lev ? ion_lev[ip] : 0,
                        m, q, pusher_algo, do_crr, do_copy,
 #ifdef WARPX_QED

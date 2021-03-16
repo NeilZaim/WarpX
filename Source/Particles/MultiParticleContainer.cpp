@@ -334,9 +334,9 @@ MultiParticleContainer::Evolve (int lev,
     if (cjz) cjz->setVal(0.0);
     if (rho) rho->setVal(0.0);
     if (crho) crho->setVal(0.0);
-    amrex::Print() << "Hello from MPC Evolve\n";
+    //amrex::Print() << "Hello from MPC Evolve\n";
     for (auto& pc : allcontainers) {
-        amrex::Print() << "Hello from MPC Evolve for loop\n";
+    //    amrex::Print() << "Hello from MPC Evolve for loop\n";
         pc->Evolve(lev, Ex, Ey, Ez, Bx, By, Bz, Ex_future, Ey_future, Ez_future, Bx_future, By_future, Bz_future, Ex_avg, Ey_avg, Ez_avg, Bx_avg, By_avg, Bz_avg, jx, jy, jz, cjx, cjy, cjz,
                    rho, crho, cEx, cEy, cEz, cBx, cBy, cBz, t, dt, a_dt_type);
     }
