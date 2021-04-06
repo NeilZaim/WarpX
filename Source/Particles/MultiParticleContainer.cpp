@@ -335,6 +335,16 @@ MultiParticleContainer::Evolve (int lev,
     }
 }
 
+
+void
+MultiParticleContainer::DepositOmegap2 (MultiFab* omegap2)
+{
+    omegap2->setVal(0.0);
+    for (auto& pc : allcontainers) {
+        pc->DepositOmegap2(omegap2);
+    }
+}
+
 void
 MultiParticleContainer::PushX (Real dt)
 {

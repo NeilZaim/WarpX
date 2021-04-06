@@ -102,6 +102,8 @@ public:
                  const amrex::MultiFab* cBx, const amrex::MultiFab* cBy, const amrex::MultiFab* cBz,
                  amrex::Real t, amrex::Real dt, DtType a_dt_type=DtType::Full);
 
+    void DepositOmegap2 (amrex::MultiFab* omegap2);
+
     ///
     /// This pushes the particle positions by one half time step for all the species in the
     /// MultiParticleContainer. It is used to desynchronize the particles after initializaton

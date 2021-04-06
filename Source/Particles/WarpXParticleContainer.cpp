@@ -62,6 +62,7 @@ WarpXParticleContainer::WarpXParticleContainer (AmrCore* amr_core, int ispecies)
     num_threads = omp_get_num_threads();
 #endif
     local_rho.resize(num_threads);
+    local_omegap2.resize(num_threads);
     local_jx.resize(num_threads);
     local_jy.resize(num_threads);
     local_jz.resize(num_threads);

@@ -122,6 +122,8 @@ public:
                          amrex::Real dt,
                          DtType a_dt_type=DtType::Full) override;
 
+    virtual void DepositOmegap2 (amrex::MultiFab* rho) override;
+
     virtual void PushPX (WarpXParIter& pti,
                          amrex::FArrayBox const * exfab,
                          amrex::FArrayBox const * eyfab,

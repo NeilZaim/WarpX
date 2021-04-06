@@ -223,6 +223,7 @@ WarpX::WarpX ()
 
     F_fp.resize(nlevs_max);
     rho_fp.resize(nlevs_max);
+    omegap2_fp.resize(nlevs_max);
     phi_fp.resize(nlevs_max);
     current_fp.resize(nlevs_max);
     Efield_fp.resize(nlevs_max);
@@ -1061,6 +1062,7 @@ WarpX::ClearLevel (int lev)
 
     F_fp  [lev].reset();
     rho_fp[lev].reset();
+    omegap2_fp[lev].reset();
     phi_fp[lev].reset();
     F_cp  [lev].reset();
     rho_cp[lev].reset();
@@ -1255,6 +1257,8 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
     {
         rho_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,rho_nodal_flag),dm,2*ncomps,ngRho,tag("rho_fp"));
     }
+
+    omegap2_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,rho_nodal_flag),dm,ncomps,ngRho,tag("omegap2_fp"));
 
     if (do_electrostatic == ElectrostaticSolverAlgo::LabFrame)
     {

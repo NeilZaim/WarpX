@@ -91,6 +91,9 @@ public:
                                 int /*lev*/,
                                 int /*depos_lev*/) override {}
 
+    // DepositOmegap2 should do nothing for photons
+    virtual void DepositOmegap2 (amrex::MultiFab* /*omegap2*/) override {}
+
     // DepositCurrent should do nothing for photons
     virtual void DepositCurrent(WarpXParIter& /*pti*/,
                                 RealVector& /*wp*/,

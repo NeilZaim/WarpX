@@ -166,6 +166,8 @@ public:
                          const amrex::MultiFab* cBx, const amrex::MultiFab* cBy, const amrex::MultiFab* cBz,
                          amrex::Real t, amrex::Real dt, DtType a_dt_type=DtType::Full) = 0;
 
+    virtual void DepositOmegap2 (amrex::MultiFab* /*omegap2*/) {}
+
     virtual void PostRestart () = 0;
 
     virtual void GetParticleSlice(const int /*direction*/, const amrex::Real /*z_old*/,
@@ -399,6 +401,7 @@ protected:
 
 #endif
     amrex::Vector<amrex::FArrayBox> local_rho;
+    amrex::Vector<amrex::FArrayBox> local_omegap2;
     amrex::Vector<amrex::FArrayBox> local_jx;
     amrex::Vector<amrex::FArrayBox> local_jy;
     amrex::Vector<amrex::FArrayBox> local_jz;

@@ -10,6 +10,7 @@
  */
 #include "WarpX.H"
 #include "FieldSolver/WarpX_QED_K.H"
+#include "Parallelization/WarpXSumGuardCells.H"
 #include "Utils/WarpXConst.H"
 #include "Utils/WarpXUtil.H"
 #include "Utils/WarpXAlgorithmSelection.H"
@@ -132,6 +133,8 @@ WarpX::Evolve (int numsteps)
 #ifdef WARPX_QED
         mypc->doQEDSchwinger();
 #endif
+
+        DepositOmegap2AndSumBoundaries();
 
         // Main PIC operation:
         // gather fields, push particles, deposit sources, update fields
@@ -568,6 +571,26 @@ WarpX::doFieldIonization (int lev)
                             *Efield_aux[lev][0],*Efield_aux[lev][1],*Efield_aux[lev][2],
                             *Bfield_aux[lev][0],*Bfield_aux[lev][1],*Bfield_aux[lev][2]);
 }
+
+void
+WarpX::DepositOmegap2AndSumBoundaries ()
+{
+    constexpr int lev = 0; // Does not work with mesh refinement
+
+    mypc->DepositOmegap2(omegap2_fp[lev].get());
+
+    const auto& period = Geom(lev).periodicity();
+    if (use_filter) {
+        IntVect ng = omegap2_fp[lev]->nGrowVect();
+        ng += bilinear_filter.stencil_length_each_dir-1;
+        MultiFab rf(omegap2_fp[lev]->boxArray(), omegap2_fp[lev]->DistributionMap(), rho_fp[0]->nComp(), ng);
+        bilinear_filter.ApplyStencil(rf, *omegap2_fp[lev], 0, 0, rho_fp[0]->nComp());
+        WarpXSumGuardCells(*omegap2_fp[lev], rf, period, 0, rho_fp[0]->nComp() );
+    } else {
+        WarpXSumGuardCells(*omegap2_fp[lev], period, 0, rho_fp[0]->nComp());
+    }
+}
+
 
 #ifdef WARPX_QED
 void

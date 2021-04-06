@@ -22,6 +22,7 @@
 #include "Particles/Pusher/PushSelector.H"
 #include "Particles/Gather/GetExternalFields.H"
 #include "Utils/WarpXAlgorithmSelection.H"
+#include "Deposition/Omegap2Deposition.H"
 
 #include <AMReX_Geometry.H>
 #include <AMReX_Print.H>
@@ -1184,6 +1185,159 @@ PhysicalParticleContainer::Evolve (int lev,
     // coarse level.
     if (do_splitting && (a_dt_type == DtType::SecondHalf || a_dt_type == DtType::Full) ){
         SplitParticles(lev);
+    }
+}
+
+void
+PhysicalParticleContainer::DepositOmegap2 (MultiFab* omegap2)
+{
+
+    // If user decides not to deposit
+    if (do_not_deposit) return;
+
+    // Does not currently work with mesh refinement
+    constexpr int lev = 0;
+
+    constexpr int offset = 0;
+
+    const std::array<Real,3>& dx = WarpX::CellSize(std::max(lev,0));
+    const Real q = this->charge;
+    const Real m = this->mass;
+
+    // Number of guard cells for local deposition of omegap2
+    WarpX& warpx = WarpX::GetInstance();
+    const amrex::IntVect& ng_omegap2 = warpx.get_ng_depos_rho();
+
+    // Extract deposition order and check that particles shape fits within the guard cells.
+    // NOTE: In specific situations where the staggering of rho and the charge deposition algorithm
+    // are not trivial, this check might be too strict and we might need to relax it, as currently
+    // done for the current deposition.
+
+#if   (AMREX_SPACEDIM == 2)
+    const amrex::IntVect shape_extent = amrex::IntVect(static_cast<int>(WarpX::nox/2+1),
+                                                       static_cast<int>(WarpX::noz/2+1));
+#elif (AMREX_SPACEDIM == 3)
+    const amrex::IntVect shape_extent = amrex::IntVect(static_cast<int>(WarpX::nox/2+1),
+                                                       static_cast<int>(WarpX::noy/2+1),
+                                                       static_cast<int>(WarpX::noz/2+1));
+#endif
+
+    // On CPU: particles deposit on tile arrays, which have a small number of guard cells ng_omegap2
+    // On GPU: particles deposit directly on the rho array, which usually have a larger number of guard cells
+#ifndef AMREX_USE_GPU
+    const amrex::IntVect range = ng_omegap2 - shape_extent;
+#else
+    const amrex::IntVect range = omegap2->nGrowVect() - shape_extent;
+#endif
+
+#ifdef AMREX_USE_OMP
+#pragma omp parallel
+#endif
+    {
+#ifdef AMREX_USE_OMP
+        int thread_num = omp_get_thread_num();
+#else
+        int thread_num = 0;
+#endif
+
+        for (WarpXParIter pti(*this, lev); pti.isValid(); ++pti)
+        {
+            auto& attribs = pti.GetAttribs();
+
+            const long np_to_depose = pti.numParticles();
+            if (np_to_depose == 0) continue;
+
+            AMREX_ALWAYS_ASSERT_WITH_MESSAGE(
+            amrex::numParticlesOutOfRange(pti, range) == 0,
+            "Particles shape does not fit within tile (CPU) or guard cells (GPU) used for omegap2 deposition");
+
+            WARPX_PROFILE_VAR_NS("PhysicalParticleContainer::DepositOmegap2::Omegap2Deposition", blp_ppc_omegap2d);
+            WARPX_PROFILE_VAR_NS("PhysicalParticleContainer::DepositOmegap2::Accumulate", blp_omegap2d_accumulate);
+
+            amrex::Box tilebox = pti.tilebox();
+
+#ifndef AMREX_USE_GPU
+            // Staggered tile box
+            amrex::Box tb = amrex::convert( tilebox, omegap2->ixType().toIntVect() );
+#endif
+
+            tilebox.grow(ng_omegap2);
+
+            const int nc = WarpX::ncomps;
+
+#ifdef AMREX_USE_GPU
+            // GPU, no tiling: rho_fab points to the full rho array
+            amrex::MultiFab omegap2i(*omegap2, amrex::make_alias, 0, nc);
+            auto & omegap2_fab = omegap2i.get(pti);
+#else
+            tb.grow(ng_omegap2);
+
+            // CPU, tiling: omegap2_fab points to omegap2_rho[thread_num]
+            local_omegap2[thread_num].resize(tb, nc);
+
+            // local_omegap2[thread_num] is set to zero
+            local_omegap2[thread_num].setVal(0.0);
+
+            auto & omegap2_fab = local_omegap2[thread_num];
+#endif
+
+            const auto GetPosition = GetParticlePosition(pti, offset);
+
+            // Lower corner of tile box physical domain
+            // Note that this includes guard cells since it is after tilebox.ngrow
+            Real cur_time = warpx.gett_new(lev);
+            const auto& time_of_last_gal_shift = warpx.time_of_last_gal_shift;
+            // Take into account Galilean shift
+            Real time_shift = (cur_time - time_of_last_gal_shift);
+            amrex::Array<amrex::Real,3> galilean_shift = {
+                                m_v_galilean[0]*time_shift,
+                                m_v_galilean[1]*time_shift,
+                                m_v_galilean[2]*time_shift};
+
+            const std::array<Real, 3>& xyzmin = WarpX::LowerCorner(tilebox, galilean_shift, lev);
+
+            // Indices of the lower bound
+            const Dim3 lo = lbound(tilebox);
+
+            WARPX_PROFILE_VAR_START(blp_ppc_omegap2d);
+            amrex::LayoutData<amrex::Real>* costs = WarpX::getCosts(lev);
+            amrex::Real* cost = costs ? &((*costs)[pti.index()]) : nullptr;
+
+            auto&  wp = attribs[PIdx::w];
+
+            int* AMREX_RESTRICT ion_lev;
+            if (do_field_ionization){
+                ion_lev = pti.GetiAttribs(particle_icomps["ionization_level"]).dataPtr();
+            } else {
+                ion_lev = nullptr;
+            }
+
+            if        (WarpX::nox == 1){
+                doOmegap2DepositionShapeN<1>(GetPosition, wp.dataPtr()+offset, ion_lev,
+                                            omegap2_fab, np_to_depose, dx, xyzmin, lo, q, m,
+                                            WarpX::n_rz_azimuthal_modes, cost,
+                                            WarpX::load_balance_costs_update_algo);
+            } else if (WarpX::nox == 2){
+                doOmegap2DepositionShapeN<2>(GetPosition, wp.dataPtr()+offset, ion_lev,
+                                            omegap2_fab, np_to_depose, dx, xyzmin, lo, q, m,
+                                            WarpX::n_rz_azimuthal_modes, cost,
+                                            WarpX::load_balance_costs_update_algo);
+            } else if (WarpX::nox == 3){
+                doOmegap2DepositionShapeN<3>(GetPosition, wp.dataPtr()+offset, ion_lev,
+                                            omegap2_fab, np_to_depose, dx, xyzmin, lo, q, m,
+                                            WarpX::n_rz_azimuthal_modes, cost,
+                                            WarpX::load_balance_costs_update_algo);
+            }
+            WARPX_PROFILE_VAR_STOP(blp_ppc_omegap2d);
+
+#ifndef AMREX_USE_GPU
+            // CPU, tiling: atomicAdd local_rho into rho
+            WARPX_PROFILE_VAR_START(blp_omegap2d_accumulate);
+            (*omegap2)[pti].atomicAdd(local_omegap2[thread_num], tb, tb, 0, 0, nc);
+            WARPX_PROFILE_VAR_STOP(blp_omegap2d_accumulate);
+#endif
+
+        }
     }
 }
 

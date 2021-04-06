@@ -241,6 +241,7 @@ public:
     amrex::MultiFab * get_pointer_Bfield_fp  (int lev, int direction) const { return Bfield_fp[lev][direction].get(); }
     amrex::MultiFab * get_pointer_current_fp  (int lev, int direction) const { return current_fp[lev][direction].get(); }
     amrex::MultiFab * get_pointer_rho_fp  (int lev) const { return rho_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_omegap2_fp  (int lev) const { return omegap2_fp[lev].get(); }
     amrex::MultiFab * get_pointer_F_fp  (int lev) const { return F_fp[lev].get(); }
     amrex::MultiFab * get_pointer_phi_fp  (int lev) const { return phi_fp[lev].get(); }
 
@@ -263,6 +264,7 @@ public:
     const amrex::MultiFab& getEfield_fp  (int lev, int direction) {return *Efield_fp[lev][direction];}
     const amrex::MultiFab& getBfield_fp  (int lev, int direction) {return *Bfield_fp[lev][direction];}
     const amrex::MultiFab& getrho_fp (int lev) {return *rho_fp[lev];}
+    const amrex::MultiFab& getomegap2_fp (int lev) {return *omegap2_fp[lev];}
     const amrex::MultiFab& getphi_fp (int lev) {return *phi_fp[lev];}
     const amrex::MultiFab& getF_fp (int lev) {return *F_fp[lev];}
 
@@ -433,6 +435,8 @@ public:
      * \param lev level
      */
     void doFieldIonization (int lev);
+
+    void DepositOmegap2AndSumBoundaries ();
 
 #ifdef WARPX_QED
     /** Run the QED module on all species */
@@ -860,6 +864,7 @@ private:
     // Fine patch
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > F_fp;
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > rho_fp;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > omegap2_fp;
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > phi_fp;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > current_fp;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Efield_fp;
