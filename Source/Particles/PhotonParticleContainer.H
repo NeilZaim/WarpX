@@ -44,6 +44,7 @@ public:
                          amrex::MultiFab* cjz,
                          amrex::MultiFab* rho,
                          amrex::MultiFab* crho,
+                         amrex::MultiFab* omegap2,
                          const amrex::MultiFab* cEx,
                          const amrex::MultiFab* cEy,
                          const amrex::MultiFab* cEz,

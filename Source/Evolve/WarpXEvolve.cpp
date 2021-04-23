@@ -583,11 +583,11 @@ WarpX::DepositOmegap2AndSumBoundaries ()
     if (use_filter) {
         IntVect ng = omegap2_fp[lev]->nGrowVect();
         ng += bilinear_filter.stencil_length_each_dir-1;
-        MultiFab rf(omegap2_fp[lev]->boxArray(), omegap2_fp[lev]->DistributionMap(), rho_fp[0]->nComp(), ng);
-        bilinear_filter.ApplyStencil(rf, *omegap2_fp[lev], 0, 0, rho_fp[0]->nComp());
-        WarpXSumGuardCells(*omegap2_fp[lev], rf, period, 0, rho_fp[0]->nComp() );
+        MultiFab rf(omegap2_fp[lev]->boxArray(), omegap2_fp[lev]->DistributionMap(), omegap2_fp[0]->nComp(), ng);
+        bilinear_filter.ApplyStencil(rf, *omegap2_fp[lev], 0, 0, omegap2_fp[0]->nComp());
+        WarpXSumGuardCells(*omegap2_fp[lev], rf, period, 0, omegap2_fp[0]->nComp() );
     } else {
-        WarpXSumGuardCells(*omegap2_fp[lev], period, 0, rho_fp[0]->nComp());
+        WarpXSumGuardCells(*omegap2_fp[lev], period, 0, omegap2_fp[0]->nComp());
     }
 }
 
@@ -637,7 +637,7 @@ WarpX::PushParticlesandDepose (int lev, amrex::Real cur_time, DtType a_dt_type)
                  *Bfield_aux[lev][0],*Bfield_aux[lev][1],*Bfield_aux[lev][2],
                  *current_x, *current_y, *current_z,
                  current_buf[lev][0].get(), current_buf[lev][1].get(), current_buf[lev][2].get(),
-                 rho_fp[lev].get(), charge_buf[lev].get(),
+                 rho_fp[lev].get(), charge_buf[lev].get(), omegap2_fp[lev].get(),
                  Efield_cax[lev][0].get(), Efield_cax[lev][1].get(), Efield_cax[lev][2].get(),
                  Bfield_cax[lev][0].get(), Bfield_cax[lev][1].get(), Bfield_cax[lev][2].get(),
                  cur_time, dt[lev], a_dt_type);

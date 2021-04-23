@@ -112,6 +112,7 @@ public:
                          amrex::MultiFab* cjz,
                          amrex::MultiFab* rho,
                          amrex::MultiFab* crho,
+                         amrex::MultiFab* omegap2,
                          const amrex::MultiFab* cEx,
                          const amrex::MultiFab* cEy,
                          const amrex::MultiFab* cEz,
@@ -131,6 +132,21 @@ public:
                          amrex::FArrayBox const * bxfab,
                          amrex::FArrayBox const * byfab,
                          amrex::FArrayBox const * bzfab,
+                         const amrex::IntVect ngE, const int /*e_is_nodal*/,
+                         const long offset,
+                         const long np_to_push,
+                         int lev, int gather_lev,
+                         amrex::Real dt, ScaleFields scaleFields,
+                         DtType a_dt_type=DtType::Full);
+
+    void PushPXPlasmaDamping (WarpXParIter& pti,
+                         amrex::FArrayBox const * exfab,
+                         amrex::FArrayBox const * eyfab,
+                         amrex::FArrayBox const * ezfab,
+                         amrex::FArrayBox const * bxfab,
+                         amrex::FArrayBox const * byfab,
+                         amrex::FArrayBox const * bzfab,
+                         amrex::MultiFab* omegap2,
                          const amrex::IntVect ngE, const int /*e_is_nodal*/,
                          const long offset,
                          const long np_to_push,
@@ -346,6 +362,12 @@ protected:
     //When true PhysicalParticleContainer tries to use a pusher including
     //radiation reaction
     bool do_classical_radiation_reaction = false;
+
+    amrex::Real m_plasma_damping_coefficient = 1.;
+
+    // No plasma damping if (omegap*dt)^2 is below this threshold
+    amrex::Real m_plasma_damping_threshold = 0.01;
+
 
 #ifdef WARPX_QED
     // A flag to enable quantum_synchrotron process for leptons
