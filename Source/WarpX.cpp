@@ -266,6 +266,12 @@ WarpX::WarpX ()
     F_fp.resize(nlevs_max);
     G_fp.resize(nlevs_max);
     rho_fp.resize(nlevs_max);
+    Ex_lowfreq_fp.resize(nlevs_max);
+    Ey_lowfreq_fp.resize(nlevs_max);
+    Ez_lowfreq_fp.resize(nlevs_max);
+    Bx_lowfreq_fp.resize(nlevs_max);
+    By_lowfreq_fp.resize(nlevs_max);
+    Bz_lowfreq_fp.resize(nlevs_max);
     phi_fp.resize(nlevs_max);
     current_fp.resize(nlevs_max);
     Efield_fp.resize(nlevs_max);
@@ -1312,6 +1318,12 @@ WarpX::ClearLevel (int lev)
     F_fp  [lev].reset();
     G_fp  [lev].reset();
     rho_fp[lev].reset();
+    Ex_lowfreq_fp[lev].reset();
+    Ey_lowfreq_fp[lev].reset();
+    Ez_lowfreq_fp[lev].reset();
+    Bx_lowfreq_fp[lev].reset();
+    By_lowfreq_fp[lev].reset();
+    Bz_lowfreq_fp[lev].reset();
     phi_fp[lev].reset();
     F_cp  [lev].reset();
     G_cp  [lev].reset();
@@ -1528,6 +1540,30 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
     if (deposit_charge)
     {
         rho_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,rho_nodal_flag),dm,2*ncomps,ngRho,tag("rho_fp"));
+    }
+    if (plot_Ex_lowfreq)
+    {
+        Ex_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Ex_nodal_flag),dm,ncomps,ngE,tag("Ex_lowfreq_fp"));
+    }
+    if (plot_Ey_lowfreq)
+    {
+        Ey_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Ey_nodal_flag),dm,ncomps,ngE,tag("Ey_lowfreq_fp"));
+    }
+    if (plot_Ez_lowfreq)
+    {
+        Ez_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Ez_nodal_flag),dm,ncomps,ngE,tag("Ez_lowfreq_fp"));
+    }
+    if (plot_Bx_lowfreq)
+    {
+        Bx_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Bx_nodal_flag),dm,ncomps,ngE,tag("Bx_lowfreq_fp"));
+    }
+    if (plot_By_lowfreq)
+    {
+        By_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,By_nodal_flag),dm,ncomps,ngE,tag("By_lowfreq_fp"));
+    }
+    if (plot_Bz_lowfreq)
+    {
+        Bz_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Bz_nodal_flag),dm,ncomps,ngE,tag("Bz_lowfreq_fp"));
     }
 
     if (do_electrostatic == ElectrostaticSolverAlgo::LabFrame)

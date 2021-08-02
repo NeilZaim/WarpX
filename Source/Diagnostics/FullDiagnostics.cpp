@@ -79,6 +79,12 @@ FullDiagnostics::ReadParameters ()
     bool raw_specified = pp_diag_name.query("plot_raw_fields", m_plot_raw_fields);
     raw_specified += pp_diag_name.query("plot_raw_fields_guards", m_plot_raw_fields_guards);
     raw_specified += pp_diag_name.query("plot_raw_rho", m_plot_raw_rho);
+    raw_specified += pp_diag_name.query("plot_raw_Ex_lowfreq", m_plot_raw_Ex_lowfreq);
+    raw_specified += pp_diag_name.query("plot_raw_Ey_lowfreq", m_plot_raw_Ey_lowfreq);
+    raw_specified += pp_diag_name.query("plot_raw_Ez_lowfreq", m_plot_raw_Ez_lowfreq);
+    raw_specified += pp_diag_name.query("plot_raw_Bx_lowfreq", m_plot_raw_Bx_lowfreq);
+    raw_specified += pp_diag_name.query("plot_raw_By_lowfreq", m_plot_raw_By_lowfreq);
+    raw_specified += pp_diag_name.query("plot_raw_Bz_lowfreq", m_plot_raw_Bz_lowfreq);
 
 #ifdef WARPX_DIM_RZ
     pp_diag_name.query("dump_rz_modes", m_dump_rz_modes);
@@ -119,7 +125,9 @@ FullDiagnostics::Flush ( int i_buffer )
     m_flush_format->WriteToFile(
         m_varnames, m_mf_output[i_buffer], m_geom_output[i_buffer], warpx.getistep(),
         warpx.gett_new(0), m_output_species, nlev_output, m_file_prefix, m_file_min_digits,
-        m_plot_raw_fields, m_plot_raw_fields_guards, m_plot_raw_rho, m_plot_raw_F);
+        m_plot_raw_fields, m_plot_raw_fields_guards, m_plot_raw_rho, m_plot_raw_F,
+        m_plot_raw_Ex_lowfreq, m_plot_raw_Ey_lowfreq, m_plot_raw_Ez_lowfreq,
+        m_plot_raw_Bx_lowfreq, m_plot_raw_By_lowfreq, m_plot_raw_Bz_lowfreq);
 
     FlushRaw();
 }

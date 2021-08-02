@@ -32,6 +32,12 @@ public:
         bool plot_raw_fields,
         bool plot_raw_fields_guards,
         bool plot_raw_rho, bool plot_raw_F,
+        bool plot_raw_Ex_lowfreq,
+        bool plot_raw_Ey_lowfreq,
+        bool plot_raw_Ez_lowfreq,
+        bool plot_raw_Bx_lowfreq,
+        bool plot_raw_By_lowfreq,
+        bool plot_raw_Bz_lowfreq,
         bool isBTD = false, int snapshotID = -1,
         const amrex::Geometry& full_BTD_snapshot = amrex::Geometry(),
         bool isLastBTDFlush = false) const override;
@@ -43,7 +49,13 @@ public:
     void WriteAllRawFields (const bool plot_raw_fields, const int nlevels,
                             const std::string& plotfilename,
                             const bool plot_raw_fields_guards,
-                            const bool plot_raw_rho, bool plot_raw_F) const;
+                            const bool plot_raw_rho, bool plot_raw_F,
+                            const bool plot_raw_Ex_lowfreq,
+                            const bool plot_raw_Ey_lowfreq,
+                            const bool plot_raw_Ez_lowfreq,
+                            const bool plot_raw_Bx_lowfreq,
+                            const bool plot_raw_By_lowfreq,
+                            const bool plot_raw_Bz_lowfreq,) const;
     void WriteHeaderParticle(std::ostream& os,
                              const amrex::Vector<ParticleDiag>& particle_diags) const;
     /** \brief Write particles data to file.

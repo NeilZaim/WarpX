@@ -31,6 +31,13 @@ private:
     bool m_plot_raw_fields_guards = false;
     /** Whether to plot charge density rho in raw fields */
     bool m_plot_raw_rho = false;
+
+    bool m_plot_raw_Ex_lowfreq = false;
+    bool m_plot_raw_Ey_lowfreq = false;
+    bool m_plot_raw_Ez_lowfreq = false;
+    bool m_plot_raw_Bx_lowfreq = false;
+    bool m_plot_raw_By_lowfreq = false;
+    bool m_plot_raw_Bz_lowfreq = false;
     /** Whether to plot F (charge conservation error) in raw fields */
     bool m_plot_raw_F = false;
     /** Read relevant parameters for BTD */
