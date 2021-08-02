@@ -82,7 +82,25 @@ class SpectralSolver
                         const bool fft_do_time_averaging,
                         const bool J_linear_in_time,
                         const bool dive_cleaning,
-                        const bool divb_cleaning);
+                        const bool divb_cleaning,
+                        const bool plot_Ex_lowfreq,
+                        const bool plot_Ey_lowfreq,
+                        const bool plot_Ez_lowfreq,
+                        const bool plot_Bx_lowfreq,
+                        const bool plot_By_lowfreq,
+                        const bool plot_Bz_lowfreq,
+                        const amrex::Real Ex_lowfreq_fundamental_wavelength,
+                        const amrex::Real Ey_lowfreq_fundamental_wavelength,
+                        const amrex::Real Ez_lowfreq_fundamental_wavelength,
+                        const amrex::Real Bx_lowfreq_fundamental_wavelength,
+                        const amrex::Real By_lowfreq_fundamental_wavelength,
+                        const amrex::Real Bz_lowfreq_fundamental_wavelength,
+                        const int Ex_lowfreq_cutoff_harmonic,
+                        const int Ey_lowfreq_cutoff_harmonic,
+                        const int Ez_lowfreq_cutoff_harmonic,
+                        const int Bx_lowfreq_cutoff_harmonic,
+                        const int By_lowfreq_cutoff_harmonic,
+                        const int Bz_lowfreq_cutoff_harmonic);
 
         /**
          * \brief Transform the component `i_comp` of MultiFab `mf`

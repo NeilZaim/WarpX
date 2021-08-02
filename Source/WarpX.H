@@ -152,6 +152,19 @@ public:
     // default is false for standard PSATD and true for Galilean PSATD (set in WarpX.cpp)
     bool update_with_rho = false;
 
+    amrex::Real Ex_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Ey_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Ez_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Bx_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real By_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Bz_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    int Ex_lowfreq_cutoff_harmonic = 0;
+    int Ey_lowfreq_cutoff_harmonic = 0;
+    int Ez_lowfreq_cutoff_harmonic = 0;
+    int Bx_lowfreq_cutoff_harmonic = 0;
+    int By_lowfreq_cutoff_harmonic = 0;
+    int Bz_lowfreq_cutoff_harmonic = 0;
+
     // PSATD: Whether to fill the guard cells with inverse FFTs based on the boundary conditions
     static amrex::IntVect fill_guards;
 
@@ -241,11 +254,23 @@ public:
 
     amrex::MultiFab * get_pointer_Efield_aux  (int lev, int direction) const { return Efield_aux[lev][direction].get(); }
     amrex::MultiFab * get_pointer_Bfield_aux  (int lev, int direction) const { return Bfield_aux[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_Ex_lowfreq_aux  (int lev) const { return Ex_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Ey_lowfreq_aux  (int lev) const { return Ey_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Ez_lowfreq_aux  (int lev) const { return Ez_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Bx_lowfreq_aux  (int lev) const { return Bx_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_By_lowfreq_aux  (int lev) const { return By_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Bz_lowfreq_aux  (int lev) const { return Bz_lowfreq_aux[lev].get(); }
 
     amrex::MultiFab * get_pointer_Efield_fp  (int lev, int direction) const { return Efield_fp[lev][direction].get(); }
     amrex::MultiFab * get_pointer_Bfield_fp  (int lev, int direction) const { return Bfield_fp[lev][direction].get(); }
     amrex::MultiFab * get_pointer_current_fp  (int lev, int direction) const { return current_fp[lev][direction].get(); }
     amrex::MultiFab * get_pointer_rho_fp  (int lev) const { return rho_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_Ex_lowfreq_fp  (int lev) const { return Ex_lowfreq_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_Ey_lowfreq_fp  (int lev) const { return Ey_lowfreq_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_Ez_lowfreq_fp  (int lev) const { return Ez_lowfreq_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_Bx_lowfreq_fp  (int lev) const { return Bx_lowfreq_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_By_lowfreq_fp  (int lev) const { return By_lowfreq_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_Bz_lowfreq_fp  (int lev) const { return Bz_lowfreq_fp[lev].get(); }
     amrex::MultiFab * get_pointer_F_fp  (int lev) const { return F_fp[lev].get(); }
     amrex::MultiFab * get_pointer_G_fp  (int lev) const { return G_fp[lev].get(); }
     amrex::MultiFab * get_pointer_phi_fp  (int lev) const { return phi_fp[lev].get(); }
@@ -260,6 +285,12 @@ public:
     const amrex::MultiFab& getcurrent (int lev, int direction) {return *current_fp[lev][direction];}
     const amrex::MultiFab& getEfield  (int lev, int direction) {return *Efield_aux[lev][direction];}
     const amrex::MultiFab& getBfield  (int lev, int direction) {return *Bfield_aux[lev][direction];}
+    const amrex::MultiFab& getEx_lowfreq (int lev) {return *Ex_lowfreq_aux[lev];}
+    const amrex::MultiFab& getEy_lowfreq (int lev) {return *Ey_lowfreq_aux[lev];}
+    const amrex::MultiFab& getEz_lowfreq (int lev) {return *Ez_lowfreq_aux[lev];}
+    const amrex::MultiFab& getBx_lowfreq (int lev) {return *Bx_lowfreq_aux[lev];}
+    const amrex::MultiFab& getBy_lowfreq (int lev) {return *By_lowfreq_aux[lev];}
+    const amrex::MultiFab& getBz_lowfreq (int lev) {return *Bz_lowfreq_aux[lev];}
 
     const amrex::MultiFab& getcurrent_cp (int lev, int direction) {return *current_cp[lev][direction];}
     const amrex::MultiFab& getEfield_cp  (int lev, int direction) {return  *Efield_cp[lev][direction];}
@@ -270,6 +301,12 @@ public:
     const amrex::MultiFab& getEfield_fp  (int lev, int direction) {return *Efield_fp[lev][direction];}
     const amrex::MultiFab& getBfield_fp  (int lev, int direction) {return *Bfield_fp[lev][direction];}
     const amrex::MultiFab& getrho_fp (int lev) {return *rho_fp[lev];}
+    const amrex::MultiFab& getEx_lowfreq_fp (int lev) {return *Ex_lowfreq_fp[lev];}
+    const amrex::MultiFab& getEy_lowfreq_fp (int lev) {return *Ey_lowfreq_fp[lev];}
+    const amrex::MultiFab& getEz_lowfreq_fp (int lev) {return *Ez_lowfreq_fp[lev];}
+    const amrex::MultiFab& getBx_lowfreq_fp (int lev) {return *Bx_lowfreq_fp[lev];}
+    const amrex::MultiFab& getBy_lowfreq_fp (int lev) {return *By_lowfreq_fp[lev];}
+    const amrex::MultiFab& getBz_lowfreq_fp (int lev) {return *Bz_lowfreq_fp[lev];}
     const amrex::MultiFab& getphi_fp (int lev) {return *phi_fp[lev];}
     const amrex::MultiFab& getF_fp (int lev) {return *F_fp[lev];}
     const amrex::MultiFab& getG_fp (int lev) {return *G_fp[lev];}
@@ -524,6 +561,12 @@ public:
     amrex::Real getcurrent_injection_position () const {return current_injection_position;}
     bool getis_synchronized() const {return is_synchronized;}
     void setplot_rho (bool a_plot_rho) {plot_rho = a_plot_rho;}
+    void setplot_Ex_lowfreq (bool a_plot_Ex_lowfreq) {plot_Ex_lowfreq = a_plot_Ex_lowfreq;}
+    void setplot_Ey_lowfreq (bool a_plot_Ey_lowfreq) {plot_Ey_lowfreq = a_plot_Ey_lowfreq;}
+    void setplot_Ez_lowfreq (bool a_plot_Ez_lowfreq) {plot_Ez_lowfreq = a_plot_Ez_lowfreq;}
+    void setplot_Bx_lowfreq (bool a_plot_Bx_lowfreq) {plot_Bx_lowfreq = a_plot_Bx_lowfreq;}
+    void setplot_By_lowfreq (bool a_plot_By_lowfreq) {plot_By_lowfreq = a_plot_By_lowfreq;}
+    void setplot_Bz_lowfreq (bool a_plot_Bz_lowfreq) {plot_Bz_lowfreq = a_plot_Bz_lowfreq;}
 
     int maxStep () const {return max_step;}
     amrex::Real stopTime () const {return stop_time;}
@@ -956,11 +999,23 @@ private:
     // Full solution
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Efield_aux;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Bfield_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ex_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ey_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ez_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Bx_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > By_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Bz_lowfreq_aux;
 
     // Fine patch
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > F_fp;
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > G_fp;
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > rho_fp;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ex_lowfreq_fp;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ey_lowfreq_fp;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ez_lowfreq_fp;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Bx_lowfreq_fp;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > By_lowfreq_fp;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Bz_lowfreq_fp;
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > phi_fp;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > current_fp;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Efield_fp;
@@ -1082,6 +1137,12 @@ private:
     std::string restart_chkfile;
 
     bool plot_rho = false;
+    bool plot_Ex_lowfreq = false;
+    bool plot_Ey_lowfreq = false;
+    bool plot_Ez_lowfreq = false;
+    bool plot_Bx_lowfreq = false;
+    bool plot_By_lowfreq = false;
+    bool plot_Bz_lowfreq = false;
 
     amrex::VisMF::Header::Version plotfile_headerversion  = amrex::VisMF::Header::Version_v1;
     amrex::VisMF::Header::Version slice_plotfile_headerversion  = amrex::VisMF::Header::Version_v1;

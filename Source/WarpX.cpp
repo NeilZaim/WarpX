@@ -262,10 +262,22 @@ WarpX::WarpX ()
 
     Efield_aux.resize(nlevs_max);
     Bfield_aux.resize(nlevs_max);
+    Ex_lowfreq_aux.resize(nlevs_max);
+    Ey_lowfreq_aux.resize(nlevs_max);
+    Ez_lowfreq_aux.resize(nlevs_max);
+    Bx_lowfreq_aux.resize(nlevs_max);
+    By_lowfreq_aux.resize(nlevs_max);
+    Bz_lowfreq_aux.resize(nlevs_max);
 
     F_fp.resize(nlevs_max);
     G_fp.resize(nlevs_max);
     rho_fp.resize(nlevs_max);
+    Ex_lowfreq_fp.resize(nlevs_max);
+    Ey_lowfreq_fp.resize(nlevs_max);
+    Ez_lowfreq_fp.resize(nlevs_max);
+    Bx_lowfreq_fp.resize(nlevs_max);
+    By_lowfreq_fp.resize(nlevs_max);
+    Bz_lowfreq_fp.resize(nlevs_max);
     phi_fp.resize(nlevs_max);
     current_fp.resize(nlevs_max);
     Efield_fp.resize(nlevs_max);
@@ -1080,6 +1092,19 @@ WarpX::ReadParameters ()
         // Overwrite update_with_rho with value set in input file
         pp_psatd.query("update_with_rho", update_with_rho);
 
+        pp_psatd.query("Ex_lowfreq_fundamental_wavelength", Ex_lowfreq_fundamental_wavelength);
+        pp_psatd.query("Ey_lowfreq_fundamental_wavelength", Ey_lowfreq_fundamental_wavelength);
+        pp_psatd.query("Ez_lowfreq_fundamental_wavelength", Ez_lowfreq_fundamental_wavelength);
+        pp_psatd.query("Bx_lowfreq_fundamental_wavelength", Bx_lowfreq_fundamental_wavelength);
+        pp_psatd.query("By_lowfreq_fundamental_wavelength", By_lowfreq_fundamental_wavelength);
+        pp_psatd.query("Bz_lowfreq_fundamental_wavelength", Bz_lowfreq_fundamental_wavelength);
+        pp_psatd.query("Ex_lowfreq_cutoff_harmonic", Ex_lowfreq_cutoff_harmonic);
+        pp_psatd.query("Ey_lowfreq_cutoff_harmonic", Ey_lowfreq_cutoff_harmonic);
+        pp_psatd.query("Ez_lowfreq_cutoff_harmonic", Ez_lowfreq_cutoff_harmonic);
+        pp_psatd.query("Bx_lowfreq_cutoff_harmonic", Bx_lowfreq_cutoff_harmonic);
+        pp_psatd.query("By_lowfreq_cutoff_harmonic", By_lowfreq_cutoff_harmonic);
+        pp_psatd.query("Bz_lowfreq_cutoff_harmonic", Bz_lowfreq_cutoff_harmonic);
+
         if (m_v_comoving[0] != 0. || m_v_comoving[1] != 0. || m_v_comoving[2] != 0.) {
             AMREX_ALWAYS_ASSERT_WITH_MESSAGE(update_with_rho,
                 "psatd.update_with_rho must be equal to 1 for comoving PSATD");
@@ -1312,6 +1337,18 @@ WarpX::ClearLevel (int lev)
     F_fp  [lev].reset();
     G_fp  [lev].reset();
     rho_fp[lev].reset();
+    Ex_lowfreq_fp[lev].reset();
+    Ey_lowfreq_fp[lev].reset();
+    Ez_lowfreq_fp[lev].reset();
+    Bx_lowfreq_fp[lev].reset();
+    By_lowfreq_fp[lev].reset();
+    Bz_lowfreq_fp[lev].reset();
+    Ex_lowfreq_aux[lev].reset();
+    Ey_lowfreq_aux[lev].reset();
+    Ez_lowfreq_aux[lev].reset();
+    Bx_lowfreq_aux[lev].reset();
+    By_lowfreq_aux[lev].reset();
+    Bz_lowfreq_aux[lev].reset();
     phi_fp[lev].reset();
     F_cp  [lev].reset();
     G_cp  [lev].reset();
@@ -1529,6 +1566,30 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
     {
         rho_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,rho_nodal_flag),dm,2*ncomps,ngRho,tag("rho_fp"));
     }
+    if (plot_Ex_lowfreq)
+    {
+        Ex_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Ex_nodal_flag),dm,ncomps,ngE,tag("Ex_lowfreq_fp"));
+    }
+    if (plot_Ey_lowfreq)
+    {
+        Ey_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Ey_nodal_flag),dm,ncomps,ngE,tag("Ey_lowfreq_fp"));
+    }
+    if (plot_Ez_lowfreq)
+    {
+        Ez_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Ez_nodal_flag),dm,ncomps,ngE,tag("Ez_lowfreq_fp"));
+    }
+    if (plot_Bx_lowfreq)
+    {
+        Bx_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Bx_nodal_flag),dm,ncomps,ngE,tag("Bx_lowfreq_fp"));
+    }
+    if (plot_By_lowfreq)
+    {
+        By_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,By_nodal_flag),dm,ncomps,ngE,tag("By_lowfreq_fp"));
+    }
+    if (plot_Bz_lowfreq)
+    {
+        Bz_lowfreq_fp[lev] = std::make_unique<MultiFab>(amrex::convert(ba,Bz_nodal_flag),dm,ncomps,ngE,tag("Bz_lowfreq_fp"));
+    }
 
     if (do_electrostatic == ElectrostaticSolverAlgo::LabFrame)
     {
@@ -1622,6 +1683,25 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
         Efield_aux[lev][0] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Efield_aux[x]"));
         Efield_aux[lev][1] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Efield_aux[y]"));
         Efield_aux[lev][2] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Efield_aux[z]"));
+
+        if (plot_Bx_lowfreq) {
+            Bx_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Bx_lowfreq_aux"));
+        }
+        if (plot_By_lowfreq) {
+            By_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("By_lowfreq_aux"));
+        }
+        if (plot_Bz_lowfreq) {
+            Bz_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Bz_lowfreq_aux"));
+        }
+        if (plot_Ex_lowfreq) {
+            Ex_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ex_lowfreq_aux"));
+        }
+        if (plot_Ey_lowfreq) {
+            Ey_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ey_lowfreq_aux"));
+        }
+        if (plot_Ez_lowfreq) {
+            Ez_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ez_lowfreq_aux"));
+        }
     } else if (lev == 0) {
         if (!WarpX::fft_do_time_averaging) {
             // In this case, the aux grid is simply an alias of the fp grid
@@ -1632,6 +1712,25 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
             Bfield_aux[lev][0] = std::make_unique<MultiFab>(*Bfield_fp[lev][0], amrex::make_alias, 0, ncomps);
             Bfield_aux[lev][1] = std::make_unique<MultiFab>(*Bfield_fp[lev][1], amrex::make_alias, 0, ncomps);
             Bfield_aux[lev][2] = std::make_unique<MultiFab>(*Bfield_fp[lev][2], amrex::make_alias, 0, ncomps);
+
+            if (plot_Ex_lowfreq) {
+                Ex_lowfreq_aux = std::make_unique<MultiFab>(*Ex_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Ey_lowfreq) {
+                Ey_lowfreq_aux = std::make_unique<MultiFab>(*Ey_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Ez_lowfreq) {
+                Ez_lowfreq_aux = std::make_unique<MultiFab>(*Ez_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Bx_lowfreq) {
+                Bx_lowfreq_aux = std::make_unique<MultiFab>(*Bx_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_By_lowfreq) {
+                By_lowfreq_aux = std::make_unique<MultiFab>(*By_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Bz_lowfreq) {
+                Bz_lowfreq_aux = std::make_unique<MultiFab>(*Bz_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
         } else {
             Efield_aux[lev][0] = std::make_unique<MultiFab>(*Efield_avg_fp[lev][0], amrex::make_alias, 0, ncomps);
             Efield_aux[lev][1] = std::make_unique<MultiFab>(*Efield_avg_fp[lev][1], amrex::make_alias, 0, ncomps);
@@ -1640,6 +1739,25 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
             Bfield_aux[lev][0] = std::make_unique<MultiFab>(*Bfield_avg_fp[lev][0], amrex::make_alias, 0, ncomps);
             Bfield_aux[lev][1] = std::make_unique<MultiFab>(*Bfield_avg_fp[lev][1], amrex::make_alias, 0, ncomps);
             Bfield_aux[lev][2] = std::make_unique<MultiFab>(*Bfield_avg_fp[lev][2], amrex::make_alias, 0, ncomps);
+
+            if (plot_Ex_lowfreq) {
+                Ex_lowfreq_aux = std::make_unique<MultiFab>(*Ex_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Ey_lowfreq) {
+                Ey_lowfreq_aux = std::make_unique<MultiFab>(*Ey_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Ez_lowfreq) {
+                Ez_lowfreq_aux = std::make_unique<MultiFab>(*Ez_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Bx_lowfreq) {
+                Bx_lowfreq_aux = std::make_unique<MultiFab>(*Bx_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_By_lowfreq) {
+                By_lowfreq_aux = std::make_unique<MultiFab>(*By_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
+            if (plot_Bz_lowfreq) {
+                Bz_lowfreq_aux = std::make_unique<MultiFab>(*Bz_lowfreq_fp, amrex::make_alias, 0, ncomps);
+            }
         }
     } else {
         Bfield_aux[lev][0] = std::make_unique<MultiFab>(amrex::convert(ba,Bx_nodal_flag),dm,ncomps,ngE,tag("Bfield_aux[x]"));
@@ -1894,7 +2012,25 @@ void WarpX::AllocLevelSpectralSolver (amrex::Vector<std::unique_ptr<SpectralSolv
                                                 fft_do_time_averaging,
                                                 J_linear_in_time,
                                                 do_dive_cleaning,
-                                                do_divb_cleaning);
+                                                do_divb_cleaning,
+                                                plot_Ex_lowfreq,
+                                                plot_Ey_lowfreq,
+                                                plot_Ez_lowfreq,
+                                                plot_Bx_lowfreq,
+                                                plot_By_lowfreq,
+                                                plot_Bz_lowfreq,
+                                                Ex_lowfreq_fundamental_wavelength,
+                                                Ey_lowfreq_fundamental_wavelength,
+                                                Ez_lowfreq_fundamental_wavelength,
+                                                Bx_lowfreq_fundamental_wavelength,
+                                                By_lowfreq_fundamental_wavelength,
+                                                Bz_lowfreq_fundamental_wavelength,
+                                                Ex_lowfreq_cutoff_harmonic,
+                                                Ey_lowfreq_cutoff_harmonic,
+                                                Ez_lowfreq_cutoff_harmonic,
+                                                Bx_lowfreq_cutoff_harmonic,
+                                                By_lowfreq_cutoff_harmonic,
+                                                Bz_lowfreq_cutoff_harmonic);
     spectral_solver[lev] = std::move(pss);
 }
 #   endif

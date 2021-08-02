@@ -372,6 +372,18 @@ BTDiagnostics::InitializeFieldFunctors (int lev)
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 1), lev, m_crse_ratio);
         } else if ( m_cellcenter_varnames[comp] == "Bz" ){
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 2), lev, m_crse_ratio);
+        } else if ( m_cellcenter_varnames[comp] == "Ex_lowfreq" ){
+            m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Ex_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_cellcenter_varnames[comp] == "Ey_lowfreq" ){
+            m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Ey_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_cellcenter_varnames[comp] == "Ez_lowfreq" ){
+            m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Ez_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_cellcenter_varnames[comp] == "Bx_lowfreq" ){
+            m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bx_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_cellcenter_varnames[comp] == "By_lowfreq" ){
+            m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_By_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_cellcenter_varnames[comp] == "Bz_lowfreq" ){
+            m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bz_lowfreq_aux(lev), lev, m_crse_ratio);
         } else if ( m_cellcenter_varnames[comp] == "jx" ){
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 0), lev, m_crse_ratio);
         } else if ( m_cellcenter_varnames[comp] == "jy" ){
@@ -620,6 +632,8 @@ BTDiagnostics::Flush (int i_buffer)
         m_varnames, m_mf_output[i_buffer], m_geom_output[i_buffer], warpx.getistep(),
         labtime, m_output_species, nlev_output, file_name, m_file_min_digits,
         m_plot_raw_fields, m_plot_raw_fields_guards, m_plot_raw_rho, m_plot_raw_F,
+        m_plot_raw_Ex_lowfreq, m_plot_raw_Ey_lowfreq, m_plot_raw_Ez_lowfreq,
+        m_plot_raw_Bx_lowfreq, m_plot_raw_By_lowfreq, m_plot_raw_Bz_lowfreq,
         isBTD, i_buffer, m_geom_snapshot[i_buffer][0], isLastBTDFlush);
 
     if (m_format == "plotfile") {

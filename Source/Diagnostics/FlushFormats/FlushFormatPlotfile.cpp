@@ -58,6 +58,12 @@ FlushFormatPlotfile::WriteToFile (
     const amrex::Vector<ParticleDiag>& particle_diags, int nlev,
     const std::string prefix, int file_min_digits, bool plot_raw_fields,
     bool plot_raw_fields_guards, bool plot_raw_rho, bool plot_raw_F,
+    bool plot_raw_Ex_lowfreq,
+    bool plot_raw_Ey_lowfreq,
+    bool plot_raw_Ez_lowfreq,
+    bool plot_raw_Bx_lowfreq,
+    bool plot_raw_By_lowfreq,
+    bool plot_raw_Bz_lowfreq,
     bool /*isBTD*/, int /*snapshotID*/, const amrex::Geometry& /*full_BTD_snapshot*/,
     bool /*isLastBTDFlush*/) const
 {
@@ -81,7 +87,13 @@ FlushFormatPlotfile::WriteToFile (
                                    );
 
     WriteAllRawFields(plot_raw_fields, nlev, filename, plot_raw_fields_guards,
-                      plot_raw_rho, plot_raw_F);
+                      plot_raw_rho, plot_raw_F,
+                      plot_raw_Ex_lowfreq,
+                      plot_raw_Ey_lowfreq,
+                      plot_raw_Ez_lowfreq,
+                      plot_raw_Bx_lowfreq,
+                      plot_raw_By_lowfreq,
+                      plot_raw_Bz_lowfreq);
 
     WriteParticles(filename, particle_diags);
 
@@ -506,7 +518,13 @@ WriteCoarseScalar( const std::string field_name,
 void
 FlushFormatPlotfile::WriteAllRawFields(
     const bool plot_raw_fields, const int nlevels, const std::string& plotfilename,
-    const bool plot_raw_fields_guards, const bool plot_raw_rho, bool plot_raw_F) const
+    const bool plot_raw_fields_guards, const bool plot_raw_rho, bool plot_raw_F,
+    bool plot_raw_Ex_lowfreq,
+    bool plot_raw_Ey_lowfreq,
+    bool plot_raw_Ez_lowfreq,
+    bool plot_raw_Bx_lowfreq,
+    bool plot_raw_By_lowfreq,
+    bool plot_raw_Bz_lowfreq) const
 {
     if (!plot_raw_fields) return;
     auto & warpx = WarpX::GetInstance();
@@ -550,6 +568,90 @@ FlushFormatPlotfile::WriteAllRawFields(
                 // If nComp > 1, this is the upper half of the list of components.
                 MultiFab rho_new(warpx.getrho_fp(lev), amrex::make_alias, warpx.getrho_fp(lev).nComp()/2, warpx.getrho_fp(lev).nComp()/2);
                 WriteRawMF(rho_new, dm, raw_pltname, default_level_prefix, "rho_fp", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Ex_lowfreq) {
+            if (warpx.get_pointer_Ex_lowfreq_fp(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Ex_lowfreq_fp was not allocated");
+            } else {
+                WriteRawMF(warpx.getEx_lowfreq_fp(lev), dm, raw_pltname, default_level_prefix, "Ex_lowfreq_fp", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Ey_lowfreq) {
+            if (warpx.get_pointer_Ey_lowfreq_fp(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Ey_lowfreq_fp was not allocated");
+            } else {
+                WriteRawMF(warpx.getEy_lowfreq_fp(lev), dm, raw_pltname, default_level_prefix, "Ey_lowfreq_fp", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Ez_lowfreq) {
+            if (warpx.get_pointer_Ez_lowfreq_fp(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Ez_lowfreq_fp was not allocated");
+            } else {
+                WriteRawMF(warpx.getEz_lowfreq_fp(lev), dm, raw_pltname, default_level_prefix, "Ez_lowfreq_fp", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Bx_lowfreq) {
+            if (warpx.get_pointer_Bx_lowfreq_fp(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Bx_lowfreq_fp was not allocated");
+            } else {
+                WriteRawMF(warpx.getBx_lowfreq_fp(lev), dm, raw_pltname, default_level_prefix, "Bx_lowfreq_fp", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_By_lowfreq) {
+            if (warpx.get_pointer_By_lowfreq_fp(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but By_lowfreq_fp was not allocated");
+            } else {
+                WriteRawMF(warpx.getBy_lowfreq_fp(lev), dm, raw_pltname, default_level_prefix, "By_lowfreq_fp", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Bz_lowfreq) {
+            if (warpx.get_pointer_Bz_lowfreq_fp(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Bz_lowfreq_fp was not allocated");
+            } else {
+                WriteRawMF(warpx.getBz_lowfreq_fp(lev), dm, raw_pltname, default_level_prefix, "Bz_lowfreq_fp", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Ex_lowfreq) {
+            if (warpx.get_pointer_Ex_lowfreq_aux(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Ex_lowfreq_aux was not allocated");
+            } else {
+                WriteRawMF(warpx.getEx_lowfreq(lev), dm, raw_pltname, default_level_prefix, "Ex_lowfreq", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Ey_lowfreq) {
+            if (warpx.get_pointer_Ey_lowfreq_aux(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Ey_lowfreq_aux was not allocated");
+            } else {
+                WriteRawMF(warpx.getEy_lowfreq(lev), dm, raw_pltname, default_level_prefix, "Ey_lowfreq", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Ez_lowfreq) {
+            if (warpx.get_pointer_Ez_lowfreq_aux(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Ez_lowfreq_aux was not allocated");
+            } else {
+                WriteRawMF(warpx.getEz_lowfreq(lev), dm, raw_pltname, default_level_prefix, "Ez_lowfreq", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Bx_lowfreq) {
+            if (warpx.get_pointer_Bx_lowfreq_fp(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Bx_lowfreq_aux was not allocated");
+            } else {
+                WriteRawMF(warpx.getBx_lowfreq(lev), dm, raw_pltname, default_level_prefix, "Bx_lowfreq", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_By_lowfreq) {
+            if (warpx.get_pointer_By_lowfreq_aux(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but By_lowfreq_aux was not allocated");
+            } else {
+                WriteRawMF(warpx.getBy_lowfreq(lev), dm, raw_pltname, default_level_prefix, "By_lowfreq", lev, plot_raw_fields_guards);
+            }
+        }
+        if (plot_raw_Bz_lowfreq) {
+            if (warpx.get_pointer_Bz_lowfreq_aux(lev) == nullptr) {
+                amrex::Warning("The user requested to write raw rho data, but Bz_lowfreq_aux was not allocated");
+            } else {
+                WriteRawMF(warpx.getBz_lowfreq(lev), dm, raw_pltname, default_level_prefix, "Bz_lowfreq", lev, plot_raw_fields_guards);
             }
         }
         if (warpx.get_pointer_phi_fp(lev) != nullptr) {

@@ -32,7 +32,25 @@ SpectralSolver::SpectralSolver(
                 const bool fft_do_time_averaging,
                 const bool J_linear_in_time,
                 const bool dive_cleaning,
-                const bool divb_cleaning)
+                const bool divb_cleaning,
+                const bool plot_Ex_lowfreq,
+                const bool plot_Ey_lowfreq,
+                const bool plot_Ez_lowfreq,
+                const bool plot_Bx_lowfreq,
+                const bool plot_By_lowfreq,
+                const bool plot_Bz_lowfreq,
+                const amrex::Real Ex_lowfreq_fundamental_wavelength,
+                const amrex::Real Ey_lowfreq_fundamental_wavelength,
+                const amrex::Real Ez_lowfreq_fundamental_wavelength,
+                const amrex::Real Bx_lowfreq_fundamental_wavelength,
+                const amrex::Real By_lowfreq_fundamental_wavelength,
+                const amrex::Real Bz_lowfreq_fundamental_wavelength,
+                const int Ex_lowfreq_cutoff_harmonic,
+                const int Ey_lowfreq_cutoff_harmonic,
+                const int Ez_lowfreq_cutoff_harmonic,
+                const int Bx_lowfreq_cutoff_harmonic,
+                const int By_lowfreq_cutoff_harmonic,
+                const int Bz_lowfreq_cutoff_harmonic)
 {
     // Initialize all structures using the same distribution mapping dm
 
@@ -64,7 +82,10 @@ SpectralSolver::SpectralSolver(
             algorithm = std::make_unique<PsatdAlgorithm>(
                 k_space, dm, m_spectral_index, norder_x, norder_y, norder_z, nodal, fill_guards,
                 v_galilean, dt, update_with_rho, fft_do_time_averaging, J_linear_in_time,
-                dive_cleaning, divb_cleaning);
+                dive_cleaning, divb_cleaning, plot_Ex_lowfreq, plot_Ey_lowfreq, plot_Ez_lowfreq,
+                plot_Bx_lowfreq, plot_By_lowfreq, plot_Bz_lowfreq,
+                Ex_lowfreq_fundamental_wavelength, Ey_lowfreq_fundamental_wavelength, Ez_lowfreq_fundamental_wavelength,
+                Bx_lowfreq_fundamental_wavelength, By_lowfreq_fundamental_wavelength, Bz_lowfreq_fundamental_wavelength,);
         }
     }
 

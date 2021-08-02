@@ -97,13 +97,21 @@ FlushFormatOpenPMD::WriteToFile (
     const amrex::Vector<ParticleDiag>& particle_diags, int /*nlev*/,
     const std::string prefix, int file_min_digits, bool plot_raw_fields,
     bool plot_raw_fields_guards, bool plot_raw_rho, bool plot_raw_F,
+    bool plot_raw_Ex_lowfreq,
+    bool plot_raw_Ey_lowfreq,
+    bool plot_raw_Ez_lowfreq,
+    bool plot_raw_Bx_lowfreq,
+    bool plot_raw_By_lowfreq,
+    bool plot_raw_Bz_lowfreq,
     bool isBTD, int snapshotID, const amrex::Geometry& full_BTD_snapshot,
     bool isLastBTDFlush) const
 {
     WARPX_PROFILE("FlushFormatOpenPMD::WriteToFile()");
 
     AMREX_ALWAYS_ASSERT_WITH_MESSAGE(
-        !plot_raw_fields && !plot_raw_fields_guards && !plot_raw_rho && !plot_raw_F,
+        !plot_raw_fields && !plot_raw_fields_guards && !plot_raw_rho && !plot_raw_F &&
+        !plot_raw_Ex_lowfreq && !plot_raw_Ey_lowfreq && !plot_raw_Ez_lowfreq &&
+        !plot_raw_Bx_lowfreq && !plot_raw_By_lowfreq && !plot_raw_Bz_lowfreq,
         "Cannot plot raw data with OpenPMD output format. Use plotfile instead.");
 
     // we output at full steps of the coarsest level
