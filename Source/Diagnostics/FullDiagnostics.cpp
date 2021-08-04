@@ -423,6 +423,18 @@ FullDiagnostics::InitializeFieldFunctors (int lev)
             m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 1), lev, m_crse_ratio);
         } else if ( m_varnames[comp] == "Bz" ){
             m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 2), lev, m_crse_ratio);
+        } else if ( m_varnames[comp] == "Ex_lowfreq" ){
+            m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Ex_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_varnames[comp] == "Ey_lowfreq" ){
+            m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Ey_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_varnames[comp] == "Ez_lowfreq" ){
+            m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Ez_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_varnames[comp] == "Bx_lowfreq" ){
+            m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bx_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_varnames[comp] == "By_lowfreq" ){
+            m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_By_lowfreq_aux(lev), lev, m_crse_ratio);
+        } else if ( m_varnames[comp] == "Bz_lowfreq" ){
+            m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bz_lowfreq_aux(lev), lev, m_crse_ratio);
         } else if ( m_varnames[comp] == "jx" ){
             m_all_field_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 0), lev, m_crse_ratio);
         } else if ( m_varnames[comp] == "jy" ){

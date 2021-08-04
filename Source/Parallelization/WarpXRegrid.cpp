@@ -203,6 +203,54 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
             rho_fp[lev] = std::move(pmf);
         }
 
+        if (Ex_lowfreq_fp[lev] != nullptr) {
+            const int nc = Ex_lowfreq_fp[lev]->nComp();
+            const IntVect& ng = Ex_lowfreq_fp[lev]->nGrowVect();
+            auto pmf = std::make_unique<MultiFab>(Ex_lowfreq_fp[lev]->boxArray(),
+                                                              dm, nc, ng);
+            Ex_lowfreq_fp[lev] = std::move(pmf);
+        }
+
+        if (Ey_lowfreq_fp[lev] != nullptr) {
+            const int nc = Ey_lowfreq_fp[lev]->nComp();
+            const IntVect& ng = Ey_lowfreq_fp[lev]->nGrowVect();
+            auto pmf = std::make_unique<MultiFab>(Ey_lowfreq_fp[lev]->boxArray(),
+                                                              dm, nc, ng);
+            Ey_lowfreq_fp[lev] = std::move(pmf);
+        }
+
+        if (Ez_lowfreq_fp[lev] != nullptr) {
+            const int nc = Ez_lowfreq_fp[lev]->nComp();
+            const IntVect& ng = Ez_lowfreq_fp[lev]->nGrowVect();
+            auto pmf = std::make_unique<MultiFab>(Ez_lowfreq_fp[lev]->boxArray(),
+                                                              dm, nc, ng);
+            Ez_lowfreq_fp[lev] = std::move(pmf);
+        }
+
+        if (Bx_lowfreq_fp[lev] != nullptr) {
+            const int nc = Bx_lowfreq_fp[lev]->nComp();
+            const IntVect& ng = Bx_lowfreq_fp[lev]->nGrowVect();
+            auto pmf = std::make_unique<MultiFab>(Bx_lowfreq_fp[lev]->boxArray(),
+                                                              dm, nc, ng);
+            Bx_lowfreq_fp[lev] = std::move(pmf);
+        }
+
+        if (By_lowfreq_fp[lev] != nullptr) {
+            const int nc = By_lowfreq_fp[lev]->nComp();
+            const IntVect& ng = By_lowfreq_fp[lev]->nGrowVect();
+            auto pmf = std::make_unique<MultiFab>(By_lowfreq_fp[lev]->boxArray(),
+                                                              dm, nc, ng);
+            By_lowfreq_fp[lev] = std::move(pmf);
+        }
+
+        if (Bz_lowfreq_fp[lev] != nullptr) {
+            const int nc = Bz_lowfreq_fp[lev]->nComp();
+            const IntVect& ng = Bz_lowfreq_fp[lev]->nGrowVect();
+            auto pmf = std::make_unique<MultiFab>(Bz_lowfreq_fp[lev]->boxArray(),
+                                                              dm, nc, ng);
+            Bz_lowfreq_fp[lev] = std::move(pmf);
+        }
+
 #ifdef WARPX_USE_PSATD
         if (maxwell_solver_id == MaxwellSolverAlgo::PSATD) {
             if (spectral_solver_fp[lev] != nullptr) {
@@ -244,6 +292,24 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
                 Bfield_aux[lev][idim] = std::make_unique<MultiFab>(*Bfield_fp[lev][idim], amrex::make_alias, 0, Bfield_aux[lev][idim]->nComp());
                 Efield_aux[lev][idim] = std::make_unique<MultiFab>(*Efield_fp[lev][idim], amrex::make_alias, 0, Efield_aux[lev][idim]->nComp());
             }
+            if (plot_Ex_lowfreq) {
+                Ex_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ex_lowfreq_fp[lev], amrex::make_alias, 0, Ex_lowfreq_aux[lev]->nComp());
+            }
+            if (plot_Ey_lowfreq) {
+                Ey_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ey_lowfreq_fp[lev], amrex::make_alias, 0, Ey_lowfreq_aux[lev]->nComp());
+            }
+            if (plot_Ez_lowfreq) {
+                Ez_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ez_lowfreq_fp[lev], amrex::make_alias, 0, Ez_lowfreq_aux[lev]->nComp());
+            }
+            if (plot_Bx_lowfreq) {
+                Bx_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Bx_lowfreq_fp[lev], amrex::make_alias, 0, Bx_lowfreq_aux[lev]->nComp());
+            }
+            if (plot_By_lowfreq) {
+                By_lowfreq_aux[lev] = std::make_unique<MultiFab>(*By_lowfreq_fp[lev], amrex::make_alias, 0, By_lowfreq_aux[lev]->nComp());
+            }
+            if (plot_Bz_lowfreq) {
+                Bz_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Bz_lowfreq_fp[lev], amrex::make_alias, 0, Bz_lowfreq_aux[lev]->nComp());
+            }
         } else {
             for (int idim=0; idim < 3; ++idim)
             {
@@ -261,6 +327,42 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
                     // pmf->Redistribute(*Efield_aux[lev][idim], 0, 0, Efield_aux[lev][idim]->nComp(), ng);
                     Efield_aux[lev][idim] = std::move(pmf);
                 }
+            }
+            if (plot_Ex_lowfreq) {
+                const IntVect& ng = Ex_lowfreq_aux[lev]->nGrowVect();
+                auto pmf = std::make_unique<MultiFab>(Ex_lowfreq_aux[lev]->boxArray(),
+                                                                      dm, Ex_lowfreq_aux[lev]->nComp(), ng);
+                Ex_lowfreq_aux[lev] = std::move(pmf);
+            }
+            if (plot_Ey_lowfreq) {
+                const IntVect& ng = Ey_lowfreq_aux[lev]->nGrowVect();
+                auto pmf = std::make_unique<MultiFab>(Ey_lowfreq_aux[lev]->boxArray(),
+                                                                      dm, Ey_lowfreq_aux[lev]->nComp(), ng);
+                Ey_lowfreq_aux[lev] = std::move(pmf);
+            }
+            if (plot_Ez_lowfreq) {
+                const IntVect& ng = Ez_lowfreq_aux[lev]->nGrowVect();
+                auto pmf = std::make_unique<MultiFab>(Ez_lowfreq_aux[lev]->boxArray(),
+                                                                      dm, Ez_lowfreq_aux[lev]->nComp(), ng);
+                Ez_lowfreq_aux[lev] = std::move(pmf);
+            }
+            if (plot_Bx_lowfreq) {
+                const IntVect& ng = Bx_lowfreq_aux[lev]->nGrowVect();
+                auto pmf = std::make_unique<MultiFab>(Bx_lowfreq_aux[lev]->boxArray(),
+                                                                      dm, Bx_lowfreq_aux[lev]->nComp(), ng);
+                Bx_lowfreq_aux[lev] = std::move(pmf);
+            }
+            if (plot_By_lowfreq) {
+                const IntVect& ng = By_lowfreq_aux[lev]->nGrowVect();
+                auto pmf = std::make_unique<MultiFab>(By_lowfreq_aux[lev]->boxArray(),
+                                                                      dm, By_lowfreq_aux[lev]->nComp(), ng);
+                By_lowfreq_aux[lev] = std::move(pmf);
+            }
+            if (plot_Bz_lowfreq) {
+                const IntVect& ng = Bz_lowfreq_aux[lev]->nGrowVect();
+                auto pmf = std::make_unique<MultiFab>(Bz_lowfreq_aux[lev]->boxArray(),
+                                                                      dm, Bz_lowfreq_aux[lev]->nComp(), ng);
+                Bz_lowfreq_aux[lev] = std::move(pmf);
             }
         }
 

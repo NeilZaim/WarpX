@@ -55,6 +55,12 @@ FlushFormatSensei::WriteToFile (
     const amrex::Vector<ParticleDiag>& particle_diags, int nlev,
     const std::string prefix, int /*file_min_digits*/, bool plot_raw_fields,
     bool plot_raw_fields_guards, bool plot_raw_rho, bool plot_raw_F,
+    bool plot_raw_Ex_lowfreq,
+    bool plot_raw_Ey_lowfreq,
+    bool plot_raw_Ez_lowfreq,
+    bool plot_raw_Bx_lowfreq,
+    bool plot_raw_By_lowfreq,
+    bool plot_raw_Bz_lowfreq,
     bool /*isBTD*/, int /*snapshotID*/,
     const amrex::Geometry& /*full_BTD_snapshot*/, bool /*isLastBTDFlush*/) const
 {
@@ -71,6 +77,12 @@ FlushFormatSensei::WriteToFile (
     (void)plot_raw_fields_guards;
     (void)plot_raw_rho;
     (void)plot_raw_F;
+    (void)plot_raw_Ex_lowfreq;
+    (void)plot_raw_Ey_lowfreq;
+    (void)plot_raw_Ez_lowfreq;
+    (void)plot_raw_Bx_lowfreq;
+    (void)plot_raw_By_lowfreq;
+    (void)plot_raw_Bz_lowfreq;
 #else
     amrex::Vector<amrex::MultiFab> *mf_ptr =
         const_cast<amrex::Vector<amrex::MultiFab>*>(&mf);

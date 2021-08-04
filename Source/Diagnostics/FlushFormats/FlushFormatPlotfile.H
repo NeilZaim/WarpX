@@ -55,7 +55,7 @@ public:
                             const bool plot_raw_Ez_lowfreq,
                             const bool plot_raw_Bx_lowfreq,
                             const bool plot_raw_By_lowfreq,
-                            const bool plot_raw_Bz_lowfreq,) const;
+                            const bool plot_raw_Bz_lowfreq) const;
     void WriteHeaderParticle(std::ostream& os,
                              const amrex::Vector<ParticleDiag>& particle_diags) const;
     /** \brief Write particles data to file.

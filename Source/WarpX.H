@@ -152,6 +152,19 @@ public:
     // default is false for standard PSATD and true for Galilean PSATD (set in WarpX.cpp)
     bool update_with_rho = false;
 
+    amrex::Real Ex_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Ey_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Ez_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Bx_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real By_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    amrex::Real Bz_lowfreq_fundamental_wavelength = amrex::Real(0.);
+    int Ex_lowfreq_cutoff_harmonic = 0;
+    int Ey_lowfreq_cutoff_harmonic = 0;
+    int Ez_lowfreq_cutoff_harmonic = 0;
+    int Bx_lowfreq_cutoff_harmonic = 0;
+    int By_lowfreq_cutoff_harmonic = 0;
+    int Bz_lowfreq_cutoff_harmonic = 0;
+
     // PSATD: Whether to fill the guard cells with inverse FFTs based on the boundary conditions
     static amrex::IntVect fill_guards;
 
@@ -241,6 +254,12 @@ public:
 
     amrex::MultiFab * get_pointer_Efield_aux  (int lev, int direction) const { return Efield_aux[lev][direction].get(); }
     amrex::MultiFab * get_pointer_Bfield_aux  (int lev, int direction) const { return Bfield_aux[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_Ex_lowfreq_aux  (int lev) const { return Ex_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Ey_lowfreq_aux  (int lev) const { return Ey_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Ez_lowfreq_aux  (int lev) const { return Ez_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Bx_lowfreq_aux  (int lev) const { return Bx_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_By_lowfreq_aux  (int lev) const { return By_lowfreq_aux[lev].get(); }
+    amrex::MultiFab * get_pointer_Bz_lowfreq_aux  (int lev) const { return Bz_lowfreq_aux[lev].get(); }
 
     amrex::MultiFab * get_pointer_Efield_fp  (int lev, int direction) const { return Efield_fp[lev][direction].get(); }
     amrex::MultiFab * get_pointer_Bfield_fp  (int lev, int direction) const { return Bfield_fp[lev][direction].get(); }
@@ -266,6 +285,12 @@ public:
     const amrex::MultiFab& getcurrent (int lev, int direction) {return *current_fp[lev][direction];}
     const amrex::MultiFab& getEfield  (int lev, int direction) {return *Efield_aux[lev][direction];}
     const amrex::MultiFab& getBfield  (int lev, int direction) {return *Bfield_aux[lev][direction];}
+    const amrex::MultiFab& getEx_lowfreq (int lev) {return *Ex_lowfreq_aux[lev];}
+    const amrex::MultiFab& getEy_lowfreq (int lev) {return *Ey_lowfreq_aux[lev];}
+    const amrex::MultiFab& getEz_lowfreq (int lev) {return *Ez_lowfreq_aux[lev];}
+    const amrex::MultiFab& getBx_lowfreq (int lev) {return *Bx_lowfreq_aux[lev];}
+    const amrex::MultiFab& getBy_lowfreq (int lev) {return *By_lowfreq_aux[lev];}
+    const amrex::MultiFab& getBz_lowfreq (int lev) {return *Bz_lowfreq_aux[lev];}
 
     const amrex::MultiFab& getcurrent_cp (int lev, int direction) {return *current_cp[lev][direction];}
     const amrex::MultiFab& getEfield_cp  (int lev, int direction) {return  *Efield_cp[lev][direction];}
@@ -974,6 +999,12 @@ private:
     // Full solution
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Efield_aux;
     amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > > Bfield_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ex_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ey_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Ez_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Bx_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > By_lowfreq_aux;
+    amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > Bz_lowfreq_aux;
 
     // Fine patch
     amrex::Vector<            std::unique_ptr<amrex::MultiFab>      > F_fp;
