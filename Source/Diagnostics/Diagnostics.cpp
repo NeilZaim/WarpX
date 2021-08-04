@@ -64,22 +64,22 @@ Diagnostics::BaseReadParameters ()
         warpx.setplot_rho(true);
     }
 
-    if (WarpXUtilStr::is_in(m_varnames, "Ex_lowfreq") {
+    if (WarpXUtilStr::is_in(m_varnames, "Ex_lowfreq")) {
         warpx.setplot_Ex_lowfreq(true);
     }
-    if (WarpXUtilStr::is_in(m_varnames, "Ey_lowfreq") {
+    if (WarpXUtilStr::is_in(m_varnames, "Ey_lowfreq")) {
         warpx.setplot_Ey_lowfreq(true);
     }
-    if (WarpXUtilStr::is_in(m_varnames, "Ez_lowfreq") {
+    if (WarpXUtilStr::is_in(m_varnames, "Ez_lowfreq")) {
         warpx.setplot_Ez_lowfreq(true);
     }
-    if (WarpXUtilStr::is_in(m_varnames, "Bx_lowfreq") {
+    if (WarpXUtilStr::is_in(m_varnames, "Bx_lowfreq")) {
         warpx.setplot_Bx_lowfreq(true);
     }
-    if (WarpXUtilStr::is_in(m_varnames, "By_lowfreq") {
+    if (WarpXUtilStr::is_in(m_varnames, "By_lowfreq")) {
         warpx.setplot_By_lowfreq(true);
     }
-    if (WarpXUtilStr::is_in(m_varnames, "Bz_lowfreq") {
+    if (WarpXUtilStr::is_in(m_varnames, "Bz_lowfreq")) {
         warpx.setplot_Bz_lowfreq(true);
     }
 

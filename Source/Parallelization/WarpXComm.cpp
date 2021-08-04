@@ -71,30 +71,30 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
                                                                                 Bfield_avg_fp : Bfield_fp;
     amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>,3>> const & Emf = WarpX::fft_do_time_averaging ?
                                                                                 Efield_avg_fp : Efield_fp;
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Ex_lowfreqmf = WarpX::plot_Ex_lowfreq ?
-                                                                                Ex_lowfreq_fp : Efield_fp[0][0];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Ey_lowfreqmf = WarpX::plot_Ey_lowfreq ?
-                                                                                Ey_lowfreq_fp : Efield_fp[0][1];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Ez_lowfreqmf = WarpX::plot_Ez_lowfreq ?
-                                                                                Ez_lowfreq_fp : Efield_fp[0][2];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Bx_lowfreqmf = WarpX::plot_Bx_lowfreq ?
-                                                                                Bx_lowfreq_fp : Bfield_fp[0][0];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & By_lowfreqmf = WarpX::plot_By_lowfreq ?
-                                                                                By_lowfreq_fp : Bfield_fp[0][1];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Bz_lowfreqmf = WarpX::plot_Bz_lowfreq ?
-                                                                                Bz_lowfreq_fp : Bfield_fp[0][2];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Ex_lowfreqmf_aux = WarpX::plot_Ex_lowfreq ?
-                                                                                Ex_lowfreq_aux : Efield_aux[0][0];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Ey_lowfreqmf_aux = WarpX::plot_Ey_lowfreq ?
-                                                                                Ey_lowfreq_aux : Efield_aux[0][1];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Ez_lowfreqmf_aux = WarpX::plot_Ez_lowfreq ?
-                                                                                Ez_lowfreq_aux : Efield_aux[0][2];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Bx_lowfreqmf_aux = WarpX::plot_Bx_lowfreq ?
-                                                                                Bx_lowfreq_aux : Bfield_aux[0][0];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & By_lowfreqmf_aux = WarpX::plot_By_lowfreq ?
-                                                                                By_lowfreq_aux : Bfield_aux[0][1];
-    amrex::Vector<std::unique_ptr<amrex::MultiFab>>> const & Bz_lowfreqmf_aux = WarpX::plot_Bz_lowfreq ?
-                                                                                Bz_lowfreq_aux : Bfield_aux[0][2];
+    std::unique_ptr<amrex::MultiFab> const & Ex_lowfreqmf = WarpX::plot_Ex_lowfreq ?
+                                                                                Ex_lowfreq_fp[0] : Efield_fp[0][0];
+    std::unique_ptr<amrex::MultiFab> const & Ey_lowfreqmf = WarpX::plot_Ey_lowfreq ?
+                                                                                Ey_lowfreq_fp[0] : Efield_fp[0][1];
+    std::unique_ptr<amrex::MultiFab> const & Ez_lowfreqmf = WarpX::plot_Ez_lowfreq ?
+                                                                                Ez_lowfreq_fp[0] : Efield_fp[0][2];
+    std::unique_ptr<amrex::MultiFab> const & Bx_lowfreqmf = WarpX::plot_Bx_lowfreq ?
+                                                                                Bx_lowfreq_fp[0] : Bfield_fp[0][0];
+    std::unique_ptr<amrex::MultiFab> const & By_lowfreqmf = WarpX::plot_By_lowfreq ?
+                                                                                By_lowfreq_fp[0] : Bfield_fp[0][1];
+    std::unique_ptr<amrex::MultiFab> const & Bz_lowfreqmf = WarpX::plot_Bz_lowfreq ?
+                                                                                Bz_lowfreq_fp[0] : Bfield_fp[0][2];
+    std::unique_ptr<amrex::MultiFab> const & Ex_lowfreqmf_aux = WarpX::plot_Ex_lowfreq ?
+                                                                                Ex_lowfreq_aux[0] : Efield_aux[0][0];
+    std::unique_ptr<amrex::MultiFab> const & Ey_lowfreqmf_aux = WarpX::plot_Ey_lowfreq ?
+                                                                                Ey_lowfreq_aux[0] : Efield_aux[0][1];
+    std::unique_ptr<amrex::MultiFab> const & Ez_lowfreqmf_aux = WarpX::plot_Ez_lowfreq ?
+                                                                                Ez_lowfreq_aux[0] : Efield_aux[0][2];
+    std::unique_ptr<amrex::MultiFab> const & Bx_lowfreqmf_aux = WarpX::plot_Bx_lowfreq ?
+                                                                                Bx_lowfreq_aux[0] : Bfield_aux[0][0];
+    std::unique_ptr<amrex::MultiFab> const & By_lowfreqmf_aux = WarpX::plot_By_lowfreq ?
+                                                                                By_lowfreq_aux[0] : Bfield_aux[0][1];
+    std::unique_ptr<amrex::MultiFab> const & Bz_lowfreqmf_aux = WarpX::plot_Bz_lowfreq ?
+                                                                                Bz_lowfreq_aux[0] : Bfield_aux[0][2];
 
     const amrex::IntVect& Bx_stag = Bmf[0][0]->ixType().toIntVect();
     const amrex::IntVect& By_stag = Bmf[0][1]->ixType().toIntVect();
@@ -122,9 +122,9 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
         Array4<Real const> const& bx_lowfreq_fp = Bx_lowfreqmf->const_array(mfi);
         Array4<Real const> const& by_lowfreq_fp = By_lowfreqmf->const_array(mfi);
         Array4<Real const> const& bz_lowfreq_fp = Bz_lowfreqmf->const_array(mfi);
-        Array4<Real const> const& bx_lowfreq_aux = Bx_lowfreqmf_aux->const_array(mfi);
-        Array4<Real const> const& by_lowfreq_aux = By_lowfreqmf_aux->const_array(mfi);
-        Array4<Real const> const& bz_lowfreq_aux = Bz_lowfreqmf_aux->const_array(mfi);
+        Array4<Real> const& bx_lowfreq_aux = Bx_lowfreqmf_aux->array(mfi);
+        Array4<Real> const& by_lowfreq_aux = By_lowfreqmf_aux->array(mfi);
+        Array4<Real> const& bz_lowfreq_aux = Bz_lowfreqmf_aux->array(mfi);
 
         Array4<Real> const& ex_aux = Efield_aux[0][0]->array(mfi);
         Array4<Real> const& ey_aux = Efield_aux[0][1]->array(mfi);
@@ -135,9 +135,9 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
         Array4<Real const> const& ex_lowfreq_fp = Ex_lowfreqmf->const_array(mfi);
         Array4<Real const> const& ey_lowfreq_fp = Ey_lowfreqmf->const_array(mfi);
         Array4<Real const> const& ez_lowfreq_fp = Ez_lowfreqmf->const_array(mfi);
-        Array4<Real const> const& ex_lowfreq_aux = Ex_lowfreqmf_aux->const_array(mfi);
-        Array4<Real const> const& ey_lowfreq_aux = Ey_lowfreqmf_aux->const_array(mfi);
-        Array4<Real const> const& ez_lowfreq_aux = Ez_lowfreqmf_aux->const_array(mfi);
+        Array4<Real> const& ex_lowfreq_aux = Ex_lowfreqmf_aux->array(mfi);
+        Array4<Real> const& ey_lowfreq_aux = Ey_lowfreqmf_aux->array(mfi);
+        Array4<Real> const& ez_lowfreq_aux = Ez_lowfreqmf_aux->array(mfi);
 
         // Loop over full box including ghost cells
         // (input arrays will be padded with zeros beyond ghost cells
@@ -608,9 +608,9 @@ WarpX::FillBoundaryE (int lev, PatchType patch_type, IntVect ng)
             Efield_fp[lev][0]->FillBoundary(ng, period);
             Efield_fp[lev][1]->FillBoundary(ng, period);
             Efield_fp[lev][2]->FillBoundary(ng, period);
-            if (plot_Ex_lowfreq) {Ex_lowfreq_fp->FillBoundary(ng, period);}
-            if (plot_Ey_lowfreq) {Ey_lowfreq_fp->FillBoundary(ng, period);}
-            if (plot_Ez_lowfreq) {Ez_lowfreq_fp->FillBoundary(ng, period);}
+            if (plot_Ex_lowfreq) {Ex_lowfreq_fp[lev]->FillBoundary(ng, period);}
+            if (plot_Ey_lowfreq) {Ey_lowfreq_fp[lev]->FillBoundary(ng, period);}
+            if (plot_Ez_lowfreq) {Ez_lowfreq_fp[lev]->FillBoundary(ng, period);}
         }
     }
     else if (patch_type == PatchType::coarse)
@@ -672,9 +672,9 @@ WarpX::FillBoundaryB (int lev, PatchType patch_type, IntVect ng)
             Bfield_fp[lev][0]->FillBoundary(ng, period);
             Bfield_fp[lev][1]->FillBoundary(ng, period);
             Bfield_fp[lev][2]->FillBoundary(ng, period);
-            if (plot_Bx_lowfreq) {Bx_lowfreq_fp->FillBoundary(ng, period);}
-            if (plot_By_lowfreq) {By_lowfreq_fp->FillBoundary(ng, period);}
-            if (plot_Bz_lowfreq) {Bz_lowfreq_fp->FillBoundary(ng, period);}
+            if (plot_Bx_lowfreq) {Bx_lowfreq_fp[lev]->FillBoundary(ng, period);}
+            if (plot_By_lowfreq) {By_lowfreq_fp[lev]->FillBoundary(ng, period);}
+            if (plot_Bz_lowfreq) {Bz_lowfreq_fp[lev]->FillBoundary(ng, period);}
         }
     }
     else if (patch_type == PatchType::coarse)

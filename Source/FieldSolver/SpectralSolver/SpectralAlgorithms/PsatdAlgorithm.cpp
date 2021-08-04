@@ -41,7 +41,25 @@ PsatdAlgorithm::PsatdAlgorithm(
     const bool time_averaging,
     const bool J_linear_in_time,
     const bool dive_cleaning,
-    const bool divb_cleaning)
+    const bool divb_cleaning,
+    const bool plot_Ex_lowfreq,
+    const bool plot_Ey_lowfreq,
+    const bool plot_Ez_lowfreq,
+    const bool plot_Bx_lowfreq,
+    const bool plot_By_lowfreq,
+    const bool plot_Bz_lowfreq,
+    const amrex::Real Ex_lowfreq_fundamental_wavelength,
+    const amrex::Real Ey_lowfreq_fundamental_wavelength,
+    const amrex::Real Ez_lowfreq_fundamental_wavelength,
+    const amrex::Real Bx_lowfreq_fundamental_wavelength,
+    const amrex::Real By_lowfreq_fundamental_wavelength,
+    const amrex::Real Bz_lowfreq_fundamental_wavelength,
+    const amrex::Real Ex_lowfreq_cutoff_harmonic,
+    const amrex::Real Ey_lowfreq_cutoff_harmonic,
+    const amrex::Real Ez_lowfreq_cutoff_harmonic,
+    const amrex::Real Bx_lowfreq_cutoff_harmonic,
+    const amrex::Real By_lowfreq_cutoff_harmonic,
+    const amrex::Real Bz_lowfreq_cutoff_harmonic)
     // Initializer list
     : SpectralBaseAlgorithm(spectral_kspace, dm, spectral_index, norder_x, norder_y, norder_z, nodal, fill_guards),
     m_spectral_index(spectral_index),
@@ -61,7 +79,25 @@ PsatdAlgorithm::PsatdAlgorithm(
     m_time_averaging(time_averaging),
     m_J_linear_in_time(J_linear_in_time),
     m_dive_cleaning(dive_cleaning),
-    m_divb_cleaning(divb_cleaning)
+    m_divb_cleaning(divb_cleaning),
+    m_plot_Ex_lowfreq(plot_Ex_lowfreq),
+    m_plot_Ey_lowfreq(plot_Ey_lowfreq),
+    m_plot_Ez_lowfreq(plot_Ez_lowfreq),
+    m_plot_Bx_lowfreq(plot_Bx_lowfreq),
+    m_plot_By_lowfreq(plot_By_lowfreq),
+    m_plot_Bz_lowfreq(plot_Bz_lowfreq),
+    m_Ex_lowfreq_fundamental_wavelength(Ex_lowfreq_fundamental_wavelength),
+    m_Ey_lowfreq_fundamental_wavelength(Ey_lowfreq_fundamental_wavelength),
+    m_Ez_lowfreq_fundamental_wavelength(Ez_lowfreq_fundamental_wavelength),
+    m_Bx_lowfreq_fundamental_wavelength(Bx_lowfreq_fundamental_wavelength),
+    m_By_lowfreq_fundamental_wavelength(By_lowfreq_fundamental_wavelength),
+    m_Bz_lowfreq_fundamental_wavelength(Bz_lowfreq_fundamental_wavelength),
+    m_Ex_lowfreq_cutoff_harmonic(Ex_lowfreq_cutoff_harmonic),
+    m_Ey_lowfreq_cutoff_harmonic(Ey_lowfreq_cutoff_harmonic),
+    m_Ez_lowfreq_cutoff_harmonic(Ez_lowfreq_cutoff_harmonic),
+    m_Bx_lowfreq_cutoff_harmonic(Bx_lowfreq_cutoff_harmonic),
+    m_By_lowfreq_cutoff_harmonic(By_lowfreq_cutoff_harmonic),
+    m_Bz_lowfreq_cutoff_harmonic(Bz_lowfreq_cutoff_harmonic)
 {
     const amrex::BoxArray& ba = spectral_kspace.spectralspace_ba;
 
@@ -123,6 +159,36 @@ PsatdAlgorithm::pushSpectralFields (SpectralFieldData& f) const
     const bool dive_cleaning    = m_dive_cleaning;
     const bool divb_cleaning    = m_divb_cleaning;
     const bool is_galilean      = m_is_galilean;
+    const bool plot_Ex_lowfreq  = m_plot_Ex_lowfreq;
+    const bool plot_Ey_lowfreq  = m_plot_Ey_lowfreq;
+    const bool plot_Ez_lowfreq  = m_plot_Ez_lowfreq;
+    const bool plot_Bx_lowfreq  = m_plot_Bx_lowfreq;
+    const bool plot_By_lowfreq  = m_plot_By_lowfreq;
+    const bool plot_Bz_lowfreq  = m_plot_Bz_lowfreq;
+    amrex::Real Ex_lowfreq_threshold = 0._rt;
+    amrex::Real Ey_lowfreq_threshold = 0._rt;
+    amrex::Real Ez_lowfreq_threshold = 0._rt;
+    amrex::Real Bx_lowfreq_threshold = 0._rt;
+    amrex::Real By_lowfreq_threshold = 0._rt;
+    amrex::Real Bz_lowfreq_threshold = 0._rt;
+    if (plot_Ex_lowfreq){
+        Ex_lowfreq_threshold = std::pow(2._rt*MathConst::pi*m_Ex_lowfreq_cutoff_harmonic/m_Ex_lowfreq_fundamental_wavelength, 2);
+    }
+    if (plot_Ey_lowfreq){
+        Ey_lowfreq_threshold = std::pow(2._rt*MathConst::pi*m_Ey_lowfreq_cutoff_harmonic/m_Ey_lowfreq_fundamental_wavelength, 2);
+    }
+    if (plot_Ez_lowfreq){
+        Ez_lowfreq_threshold = std::pow(2._rt*MathConst::pi*m_Ez_lowfreq_cutoff_harmonic/m_Ez_lowfreq_fundamental_wavelength, 2);
+    }
+    if (plot_Bx_lowfreq){
+        Bx_lowfreq_threshold = std::pow(2._rt*MathConst::pi*m_Bx_lowfreq_cutoff_harmonic/m_Bx_lowfreq_fundamental_wavelength, 2);
+    }
+    if (plot_By_lowfreq){
+        By_lowfreq_threshold = std::pow(2._rt*MathConst::pi*m_By_lowfreq_cutoff_harmonic/m_By_lowfreq_fundamental_wavelength, 2);
+    }
+    if (plot_Bz_lowfreq){
+        Bz_lowfreq_threshold = std::pow(2._rt*MathConst::pi*m_Bz_lowfreq_cutoff_harmonic/m_Bz_lowfreq_fundamental_wavelength, 2);
+    }
 
     const amrex::Real dt = m_dt;
 
@@ -415,6 +481,62 @@ PsatdAlgorithm::pushSpectralFields (SpectralFieldData& f) const
                                            + I * Psi2 * (kx * Ey_old - ky * Ex_old)
                                            + I * Y1 * (kx * Jy - ky * Jx);
             }
+
+            if (plot_Ex_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Ex_lowfreq_threshold){
+                    fields(i,j,k,Idx.Ex_lowfreq) = fields(i,j,k,Idx.Ex);
+                }
+                else {
+                    fields(i,j,k,Idx.Ex_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
+                }
+            }
+            if (plot_Ey_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Ey_lowfreq_threshold){
+                    fields(i,j,k,Idx.Ey_lowfreq) = fields(i,j,k,Idx.Ey);
+                }
+                else {
+                    fields(i,j,k,Idx.Ey_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
+                }
+            }
+            if (plot_Ez_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Ez_lowfreq_threshold){
+                    fields(i,j,k,Idx.Ez_lowfreq) = fields(i,j,k,Idx.Ez);
+                }
+                else {
+                    fields(i,j,k,Idx.Ez_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
+                }
+            }
+            if (plot_Bx_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Bx_lowfreq_threshold){
+                    fields(i,j,k,Idx.Bx_lowfreq) = fields(i,j,k,Idx.Bx);
+                }
+                else {
+                    fields(i,j,k,Idx.Bx_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
+                }
+            }
+            if (plot_By_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < By_lowfreq_threshold){
+                    fields(i,j,k,Idx.By_lowfreq) = fields(i,j,k,Idx.By);
+                }
+                else {
+                    fields(i,j,k,Idx.By_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
+                }
+            }
+            if (plot_Bz_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Bz_lowfreq_threshold){
+                    fields(i,j,k,Idx.Bz_lowfreq) = fields(i,j,k,Idx.Bz);
+                }
+                else {
+                    fields(i,j,k,Idx.Bz_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
+                }
+            }
+
         });
     }
 }

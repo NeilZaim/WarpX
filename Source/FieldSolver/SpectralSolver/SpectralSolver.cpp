@@ -45,12 +45,12 @@ SpectralSolver::SpectralSolver(
                 const amrex::Real Bx_lowfreq_fundamental_wavelength,
                 const amrex::Real By_lowfreq_fundamental_wavelength,
                 const amrex::Real Bz_lowfreq_fundamental_wavelength,
-                const int Ex_lowfreq_cutoff_harmonic,
-                const int Ey_lowfreq_cutoff_harmonic,
-                const int Ez_lowfreq_cutoff_harmonic,
-                const int Bx_lowfreq_cutoff_harmonic,
-                const int By_lowfreq_cutoff_harmonic,
-                const int Bz_lowfreq_cutoff_harmonic)
+                const amrex::Real Ex_lowfreq_cutoff_harmonic,
+                const amrex::Real Ey_lowfreq_cutoff_harmonic,
+                const amrex::Real Ez_lowfreq_cutoff_harmonic,
+                const amrex::Real Bx_lowfreq_cutoff_harmonic,
+                const amrex::Real By_lowfreq_cutoff_harmonic,
+                const amrex::Real Bz_lowfreq_cutoff_harmonic)
 {
     // Initialize all structures using the same distribution mapping dm
 
@@ -60,7 +60,9 @@ SpectralSolver::SpectralSolver(
     const SpectralKSpace k_space= SpectralKSpace(realspace_ba, dm, dx);
 
     m_spectral_index = SpectralFieldIndex(update_with_rho, fft_do_time_averaging,
-                                          J_linear_in_time, dive_cleaning, divb_cleaning, pml);
+                                          J_linear_in_time, dive_cleaning, divb_cleaning, pml,
+                                          plot_Ex_lowfreq, plot_Ey_lowfreq, plot_Ez_lowfreq,
+                                          plot_Bx_lowfreq, plot_By_lowfreq, plot_Bz_lowfreq);
 
     // - Select the algorithm depending on the input parameters
     //   Initialize the corresponding coefficients over k space
@@ -85,7 +87,9 @@ SpectralSolver::SpectralSolver(
                 dive_cleaning, divb_cleaning, plot_Ex_lowfreq, plot_Ey_lowfreq, plot_Ez_lowfreq,
                 plot_Bx_lowfreq, plot_By_lowfreq, plot_Bz_lowfreq,
                 Ex_lowfreq_fundamental_wavelength, Ey_lowfreq_fundamental_wavelength, Ez_lowfreq_fundamental_wavelength,
-                Bx_lowfreq_fundamental_wavelength, By_lowfreq_fundamental_wavelength, Bz_lowfreq_fundamental_wavelength,);
+                Bx_lowfreq_fundamental_wavelength, By_lowfreq_fundamental_wavelength, Bz_lowfreq_fundamental_wavelength,
+                Ex_lowfreq_cutoff_harmonic, Ey_lowfreq_cutoff_harmonic, Ez_lowfreq_cutoff_harmonic,
+                Bx_lowfreq_cutoff_harmonic, By_lowfreq_cutoff_harmonic, Bz_lowfreq_cutoff_harmonic);
         }
     }
 

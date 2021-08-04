@@ -60,7 +60,25 @@ class PsatdAlgorithm : public SpectralBaseAlgorithm
             const bool time_averaging,
             const bool J_linear_in_time,
             const bool dive_cleaning,
-            const bool divb_cleaning);
+            const bool divb_cleaning,
+            const bool plot_Ex_lowfreq,
+            const bool plot_Ey_lowfreq,
+            const bool plot_Ez_lowfreq,
+            const bool plot_Bx_lowfreq,
+            const bool plot_By_lowfreq,
+            const bool plot_Bz_lowfreq,
+            const amrex::Real Ex_lowfreq_fundamental_wavelength,
+            const amrex::Real Ey_lowfreq_fundamental_wavelength,
+            const amrex::Real Ez_lowfreq_fundamental_wavelength,
+            const amrex::Real Bx_lowfreq_fundamental_wavelength,
+            const amrex::Real By_lowfreq_fundamental_wavelength,
+            const amrex::Real Bz_lowfreq_fundamental_wavelength,
+            const amrex::Real Ex_lowfreq_cutoff_harmonic,
+            const amrex::Real Ey_lowfreq_cutoff_harmonic,
+            const amrex::Real Ez_lowfreq_cutoff_harmonic,
+            const amrex::Real Bx_lowfreq_cutoff_harmonic,
+            const amrex::Real By_lowfreq_cutoff_harmonic,
+            const amrex::Real Bz_lowfreq_cutoff_harmonic);
 
         /**
          * \brief Updates the E and B fields in spectral space, according to the relevant PSATD equations
@@ -170,6 +188,24 @@ class PsatdAlgorithm : public SpectralBaseAlgorithm
         bool m_dive_cleaning;
         bool m_divb_cleaning;
         bool m_is_galilean;
+        bool m_plot_Ex_lowfreq;
+        bool m_plot_Ey_lowfreq;
+        bool m_plot_Ez_lowfreq;
+        bool m_plot_Bx_lowfreq;
+        bool m_plot_By_lowfreq;
+        bool m_plot_Bz_lowfreq;
+        amrex::Real m_Ex_lowfreq_fundamental_wavelength;
+        amrex::Real m_Ey_lowfreq_fundamental_wavelength;
+        amrex::Real m_Ez_lowfreq_fundamental_wavelength;
+        amrex::Real m_Bx_lowfreq_fundamental_wavelength;
+        amrex::Real m_By_lowfreq_fundamental_wavelength;
+        amrex::Real m_Bz_lowfreq_fundamental_wavelength;
+        amrex::Real m_Ex_lowfreq_cutoff_harmonic;
+        amrex::Real m_Ey_lowfreq_cutoff_harmonic;
+        amrex::Real m_Ez_lowfreq_cutoff_harmonic;
+        amrex::Real m_Bx_lowfreq_cutoff_harmonic;
+        amrex::Real m_By_lowfreq_cutoff_harmonic;
+        amrex::Real m_Bz_lowfreq_cutoff_harmonic;
 };
 #endif // WARPX_USE_PSATD
 #endif // WARPX_PSATD_ALGORITHM_H_

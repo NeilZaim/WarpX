@@ -1685,22 +1685,22 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
         Efield_aux[lev][2] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Efield_aux[z]"));
 
         if (plot_Bx_lowfreq) {
-            Bx_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Bx_lowfreq_aux"));
+            Bx_lowfreq_aux[lev] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Bx_lowfreq_aux"));
         }
         if (plot_By_lowfreq) {
-            By_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("By_lowfreq_aux"));
+            By_lowfreq_aux[lev] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("By_lowfreq_aux"));
         }
         if (plot_Bz_lowfreq) {
-            Bz_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Bz_lowfreq_aux"));
+            Bz_lowfreq_aux[lev] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Bz_lowfreq_aux"));
         }
         if (plot_Ex_lowfreq) {
-            Ex_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ex_lowfreq_aux"));
+            Ex_lowfreq_aux[lev] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ex_lowfreq_aux"));
         }
         if (plot_Ey_lowfreq) {
-            Ey_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ey_lowfreq_aux"));
+            Ey_lowfreq_aux[lev] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ey_lowfreq_aux"));
         }
         if (plot_Ez_lowfreq) {
-            Ez_lowfreq_aux = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ez_lowfreq_aux"));
+            Ez_lowfreq_aux[lev] = std::make_unique<MultiFab>(nba,dm,ncomps,ngE,tag("Ez_lowfreq_aux"));
         }
     } else if (lev == 0) {
         if (!WarpX::fft_do_time_averaging) {
@@ -1714,22 +1714,22 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
             Bfield_aux[lev][2] = std::make_unique<MultiFab>(*Bfield_fp[lev][2], amrex::make_alias, 0, ncomps);
 
             if (plot_Ex_lowfreq) {
-                Ex_lowfreq_aux = std::make_unique<MultiFab>(*Ex_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Ex_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ex_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Ey_lowfreq) {
-                Ey_lowfreq_aux = std::make_unique<MultiFab>(*Ey_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Ey_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ey_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Ez_lowfreq) {
-                Ez_lowfreq_aux = std::make_unique<MultiFab>(*Ez_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Ez_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ez_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Bx_lowfreq) {
-                Bx_lowfreq_aux = std::make_unique<MultiFab>(*Bx_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Bx_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Bx_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_By_lowfreq) {
-                By_lowfreq_aux = std::make_unique<MultiFab>(*By_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                By_lowfreq_aux[lev] = std::make_unique<MultiFab>(*By_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Bz_lowfreq) {
-                Bz_lowfreq_aux = std::make_unique<MultiFab>(*Bz_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Bz_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Bz_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
         } else {
             Efield_aux[lev][0] = std::make_unique<MultiFab>(*Efield_avg_fp[lev][0], amrex::make_alias, 0, ncomps);
@@ -1741,22 +1741,22 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
             Bfield_aux[lev][2] = std::make_unique<MultiFab>(*Bfield_avg_fp[lev][2], amrex::make_alias, 0, ncomps);
 
             if (plot_Ex_lowfreq) {
-                Ex_lowfreq_aux = std::make_unique<MultiFab>(*Ex_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Ex_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ex_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Ey_lowfreq) {
-                Ey_lowfreq_aux = std::make_unique<MultiFab>(*Ey_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Ey_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ey_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Ez_lowfreq) {
-                Ez_lowfreq_aux = std::make_unique<MultiFab>(*Ez_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Ez_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Ez_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Bx_lowfreq) {
-                Bx_lowfreq_aux = std::make_unique<MultiFab>(*Bx_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Bx_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Bx_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_By_lowfreq) {
-                By_lowfreq_aux = std::make_unique<MultiFab>(*By_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                By_lowfreq_aux[lev] = std::make_unique<MultiFab>(*By_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
             if (plot_Bz_lowfreq) {
-                Bz_lowfreq_aux = std::make_unique<MultiFab>(*Bz_lowfreq_fp, amrex::make_alias, 0, ncomps);
+                Bz_lowfreq_aux[lev] = std::make_unique<MultiFab>(*Bz_lowfreq_fp[lev], amrex::make_alias, 0, ncomps);
             }
         }
     } else {

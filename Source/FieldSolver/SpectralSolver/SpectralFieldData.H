@@ -56,7 +56,13 @@ class SpectralFieldIndex
                             const bool J_linear_in_time,
                             const bool dive_cleaning,
                             const bool divb_cleaning,
-                            const bool pml);
+                            const bool pml,
+                            const bool plot_Ex_lowfreq,
+                            const bool plot_Ey_lowfreq,
+                            const bool plot_Ez_lowfreq,
+                            const bool plot_Bx_lowfreq,
+                            const bool plot_By_lowfreq,
+                            const bool plot_Bz_lowfreq);
 
         /**
          * \brief Default constructor
@@ -97,6 +103,9 @@ class SpectralFieldIndex
     // PML with div(E) and/or div(B) cleaning
     int Exx = -1, Eyy = -1, Ezz = -1, Bxx = -1, Byy = -1, Bzz = -1;
     int Fx  = -1, Fy  = -1, Fz  = -1, Gx  = -1, Gy  = -1, Gz  = -1;
+
+    int Ex_lowfreq = -1, Ey_lowfreq = -1, Ez_lowfreq = -1;
+    int Bx_lowfreq = -1, By_lowfreq = -1, Bz_lowfreq = -1;
 };
 
 /** \brief Class that stores the fields in spectral space, and performs the

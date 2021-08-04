@@ -605,7 +605,8 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& /*g
         spectral_solver_fp = std::make_unique<SpectralSolver>(lev, realspace_ba, dm,
             nox_fft, noy_fft, noz_fft, do_nodal, WarpX::fill_guards, v_galilean_zero,
             v_comoving_zero, dx, dt, in_pml, periodic_single_box, update_with_rho,
-            fft_do_time_averaging, J_linear_in_time, m_dive_cleaning, m_divb_cleaning);
+            fft_do_time_averaging, J_linear_in_time, m_dive_cleaning, m_divb_cleaning,
+            false,false,false,false,false,false,0,0,0,0,0,0,0,0,0,0,0,0);
 #endif
     }
 
@@ -713,7 +714,8 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& /*g
             spectral_solver_cp = std::make_unique<SpectralSolver>(lev, realspace_cba, cdm,
                 nox_fft, noy_fft, noz_fft, do_nodal, WarpX::fill_guards, v_galilean_zero,
                 v_comoving_zero, cdx, dt, in_pml, periodic_single_box, update_with_rho,
-                fft_do_time_averaging, J_linear_in_time, m_dive_cleaning, m_divb_cleaning);
+                fft_do_time_averaging, J_linear_in_time, m_dive_cleaning, m_divb_cleaning,
+                false,false,false,false,false,false,0,0,0,0,0,0,0,0,0,0,0,0);
 #endif
         }
     }

@@ -128,6 +128,25 @@ WarpX::PSATDBackwardTransformEB ()
             BackwardTransformVect(lev, *spectral_solver_cp[lev], Efield_cp[lev], Idx.Ex, Idx.Ey, Idx.Ez);
             BackwardTransformVect(lev, *spectral_solver_cp[lev], Bfield_cp[lev], Idx.Bx, Idx.By, Idx.Bz);
         }
+
+        if (plot_Ex_lowfreq){
+            spectral_solver_fp[lev]->BackwardTransform(lev, *Ex_lowfreq_fp[lev], Idx.Ex_lowfreq);
+        }
+        if (plot_Ey_lowfreq){
+            spectral_solver_fp[lev]->BackwardTransform(lev, *Ey_lowfreq_fp[lev], Idx.Ey_lowfreq);
+        }
+        if (plot_Ez_lowfreq){
+            spectral_solver_fp[lev]->BackwardTransform(lev, *Ez_lowfreq_fp[lev], Idx.Ez_lowfreq);
+        }
+        if (plot_Bx_lowfreq){
+            spectral_solver_fp[lev]->BackwardTransform(lev, *Bx_lowfreq_fp[lev], Idx.Bx_lowfreq);
+        }
+        if (plot_By_lowfreq){
+            spectral_solver_fp[lev]->BackwardTransform(lev, *By_lowfreq_fp[lev], Idx.By_lowfreq);
+        }
+        if (plot_Bz_lowfreq){
+            spectral_solver_fp[lev]->BackwardTransform(lev, *Bz_lowfreq_fp[lev], Idx.Bz_lowfreq);
+        }
     }
 
     // Damp the fields in the guard cells along z

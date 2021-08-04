@@ -158,12 +158,12 @@ public:
     amrex::Real Bx_lowfreq_fundamental_wavelength = amrex::Real(0.);
     amrex::Real By_lowfreq_fundamental_wavelength = amrex::Real(0.);
     amrex::Real Bz_lowfreq_fundamental_wavelength = amrex::Real(0.);
-    int Ex_lowfreq_cutoff_harmonic = 0;
-    int Ey_lowfreq_cutoff_harmonic = 0;
-    int Ez_lowfreq_cutoff_harmonic = 0;
-    int Bx_lowfreq_cutoff_harmonic = 0;
-    int By_lowfreq_cutoff_harmonic = 0;
-    int Bz_lowfreq_cutoff_harmonic = 0;
+    amrex::Real Ex_lowfreq_cutoff_harmonic = amrex::Real(0);
+    amrex::Real Ey_lowfreq_cutoff_harmonic = amrex::Real(0);
+    amrex::Real Ez_lowfreq_cutoff_harmonic = amrex::Real(0);
+    amrex::Real Bx_lowfreq_cutoff_harmonic = amrex::Real(0);
+    amrex::Real By_lowfreq_cutoff_harmonic = amrex::Real(0);
+    amrex::Real Bz_lowfreq_cutoff_harmonic = amrex::Real(0);
 
     // PSATD: Whether to fill the guard cells with inverse FFTs based on the boundary conditions
     static amrex::IntVect fill_guards;

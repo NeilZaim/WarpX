@@ -37,7 +37,13 @@ SpectralFieldIndex::SpectralFieldIndex (const bool update_with_rho,
                                         const bool J_linear_in_time,
                                         const bool dive_cleaning,
                                         const bool divb_cleaning,
-                                        const bool pml)
+                                        const bool pml,
+                                        const bool plot_Ex_lowfreq,
+                                        const bool plot_Ey_lowfreq,
+                                        const bool plot_Ez_lowfreq,
+                                        const bool plot_Bx_lowfreq,
+                                        const bool plot_By_lowfreq,
+                                        const bool plot_Bz_lowfreq)
 {
     // TODO Use these to allocate rho_old, rho_new, F, and G only when needed
     amrex::ignore_unused(update_with_rho);
@@ -76,6 +82,32 @@ SpectralFieldIndex::SpectralFieldIndex (const bool update_with_rho,
                 G = c++;
             }
         }
+
+        if (plot_Ex_lowfreq)
+        {
+            Ex_lowfreq = c++;
+        }
+        if (plot_Ey_lowfreq)
+        {
+            Ey_lowfreq = c++;
+        }
+        if (plot_Ez_lowfreq)
+        {
+            Ez_lowfreq = c++;
+        }
+        if (plot_Bx_lowfreq)
+        {
+            Bx_lowfreq = c++;
+        }
+        if (plot_By_lowfreq)
+        {
+            By_lowfreq = c++;
+        }
+        if (plot_Bz_lowfreq)
+        {
+            Bz_lowfreq = c++;
+        }
+
     }
     else // PML
     {
