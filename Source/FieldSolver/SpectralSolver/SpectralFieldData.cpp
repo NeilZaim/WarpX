@@ -376,11 +376,6 @@ SpectralFieldData::BackwardTransform (const int lev,
             // Loop over indices within one box
             const Box spectralspace_bx = tmpSpectralField[mfi].box();
 
-            amrex::Real norm_2 = amrex::Real(0.);
-            amrex::Real* norm_2_pointer = &norm_2;
-
-            amrex::Print() << "spectralspace_bx: " << spectralspace_bx << "\n";
-
             ParallelFor( spectralspace_bx,
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept {
                 Complex spectral_field_value = field_arr(i,j,k,field_index);
@@ -394,11 +389,7 @@ SpectralFieldData::BackwardTransform (const int lev,
 #endif
                 // Copy field into temporary array
                 tmp_arr(i,j,k) = spectral_field_value;
-
-                *norm_2_pointer += std::pow(spectral_field_value.real(), 2) + std::pow(spectral_field_value.imag(), 2);
             });
-
-            printf("norm2 in Fourier space: %e \n", norm_2);
         }
 
         // Perform Fourier transform from `tmpSpectralField` to `tmpRealField`
@@ -429,8 +420,6 @@ SpectralFieldData::BackwardTransform (const int lev,
 #elif (AMREX_SPACEDIM == 3)
             const int lo_k = amrex::lbound(mf_box).z;
 #endif
-
-            amrex::Print() << "mf_box: " << mf_box << "\n";
             // If necessary, do not fill the guard cells
             // (shrink box by passing negative number of cells)
             if (m_periodic_single_box == false)
@@ -440,12 +429,6 @@ SpectralFieldData::BackwardTransform (const int lev,
                     if (static_cast<bool>(fill_guards[dir]) == false) mf_box.grow(dir, -mf_ng[dir]);
                 }
             }
-
-            amrex::Real norm_2 = amrex::Real(0.);
-            amrex::Real* norm_2_pointer = &norm_2;
-
-            amrex::Print() << "mf_box: " << mf_box << "\n";
-
             // Loop over cells within full box, including ghost cells
             ParallelFor(mf_box, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
             {
@@ -458,10 +441,7 @@ SpectralFieldData::BackwardTransform (const int lev,
                 const int kk = (k == lo_k + nk - sk) ? lo_k : k;
                 // Copy and normalize field
                 mf_arr(i,j,k,i_comp) = inv_N * tmp_arr(ii,jj,kk);
-
-                *norm_2_pointer += std::pow(mf_arr(i,j,k,i_comp), 2);
             });
-            printf("norm2 in real space (including guard cells): %e \n", norm_2);
         }
 
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)

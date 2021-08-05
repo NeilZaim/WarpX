@@ -122,21 +122,18 @@ WarpX::PSATDBackwardTransformLowFreq ()
     for (int lev = 0; lev <= finest_level; ++lev)
     {
         if (plot_Ex_lowfreq){
-            amrex::Print() << "Ex_lowfreq BT \n";
             spectral_solver_fp[lev]->BackwardTransform(lev, *Ex_lowfreq_fp[lev], Idx.Ex_lowfreq);
         }
         if (plot_Ey_lowfreq){
             spectral_solver_fp[lev]->BackwardTransform(lev, *Ey_lowfreq_fp[lev], Idx.Ey_lowfreq);
         }
         if (plot_Ez_lowfreq){
-            amrex::Print() << "Ez_lowfreq BT \n";
             spectral_solver_fp[lev]->BackwardTransform(lev, *Ez_lowfreq_fp[lev], Idx.Ez_lowfreq);
         }
         if (plot_Bx_lowfreq){
             spectral_solver_fp[lev]->BackwardTransform(lev, *Bx_lowfreq_fp[lev], Idx.Bx_lowfreq);
         }
         if (plot_By_lowfreq){
-            amrex::Print() << "By_lowfreq BT \n";
             spectral_solver_fp[lev]->BackwardTransform(lev, *By_lowfreq_fp[lev], Idx.By_lowfreq);
         }
         if (plot_Bz_lowfreq){
@@ -152,9 +149,7 @@ WarpX::PSATDBackwardTransformEB ()
 
     for (int lev = 0; lev <= finest_level; ++lev)
     {
-        amrex::Print() << "E BT \n";
         BackwardTransformVect(lev, *spectral_solver_fp[lev], Efield_fp[lev], Idx.Ex, Idx.Ey, Idx.Ez);
-        amrex::Print() << "B BT \n";
         BackwardTransformVect(lev, *spectral_solver_fp[lev], Bfield_fp[lev], Idx.Bx, Idx.By, Idx.Bz);
 
         if (spectral_solver_cp[lev])
@@ -483,6 +478,7 @@ WarpX::FillLowFreq ()
 
     PSATDForwardTransformEB();
     PSATDFillLowFreq();
+    PSATDBackwardTransformEB();
     PSATDBackwardTransformLowFreq();
 #endif
 }
