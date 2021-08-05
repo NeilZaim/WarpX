@@ -1092,18 +1092,18 @@ WarpX::ReadParameters ()
         // Overwrite update_with_rho with value set in input file
         pp_psatd.query("update_with_rho", update_with_rho);
 
-        pp_psatd.query("Ex_lowfreq_fundamental_wavelength", Ex_lowfreq_fundamental_wavelength);
-        pp_psatd.query("Ey_lowfreq_fundamental_wavelength", Ey_lowfreq_fundamental_wavelength);
-        pp_psatd.query("Ez_lowfreq_fundamental_wavelength", Ez_lowfreq_fundamental_wavelength);
-        pp_psatd.query("Bx_lowfreq_fundamental_wavelength", Bx_lowfreq_fundamental_wavelength);
-        pp_psatd.query("By_lowfreq_fundamental_wavelength", By_lowfreq_fundamental_wavelength);
-        pp_psatd.query("Bz_lowfreq_fundamental_wavelength", Bz_lowfreq_fundamental_wavelength);
-        pp_psatd.query("Ex_lowfreq_cutoff_harmonic", Ex_lowfreq_cutoff_harmonic);
-        pp_psatd.query("Ey_lowfreq_cutoff_harmonic", Ey_lowfreq_cutoff_harmonic);
-        pp_psatd.query("Ez_lowfreq_cutoff_harmonic", Ez_lowfreq_cutoff_harmonic);
-        pp_psatd.query("Bx_lowfreq_cutoff_harmonic", Bx_lowfreq_cutoff_harmonic);
-        pp_psatd.query("By_lowfreq_cutoff_harmonic", By_lowfreq_cutoff_harmonic);
-        pp_psatd.query("Bz_lowfreq_cutoff_harmonic", Bz_lowfreq_cutoff_harmonic);
+        queryWithParser(pp_psatd, "Ex_lowfreq_fundamental_wavelength", Ex_lowfreq_fundamental_wavelength);
+        queryWithParser(pp_psatd, "Ey_lowfreq_fundamental_wavelength", Ey_lowfreq_fundamental_wavelength);
+        queryWithParser(pp_psatd, "Ez_lowfreq_fundamental_wavelength", Ez_lowfreq_fundamental_wavelength);
+        queryWithParser(pp_psatd, "Bx_lowfreq_fundamental_wavelength", Bx_lowfreq_fundamental_wavelength);
+        queryWithParser(pp_psatd, "By_lowfreq_fundamental_wavelength", By_lowfreq_fundamental_wavelength);
+        queryWithParser(pp_psatd, "Bz_lowfreq_fundamental_wavelength", Bz_lowfreq_fundamental_wavelength);
+        queryWithParser(pp_psatd, "Ex_lowfreq_cutoff_harmonic", Ex_lowfreq_cutoff_harmonic);
+        queryWithParser(pp_psatd, "Ey_lowfreq_cutoff_harmonic", Ey_lowfreq_cutoff_harmonic);
+        queryWithParser(pp_psatd, "Ez_lowfreq_cutoff_harmonic", Ez_lowfreq_cutoff_harmonic);
+        queryWithParser(pp_psatd, "Bx_lowfreq_cutoff_harmonic", Bx_lowfreq_cutoff_harmonic);
+        queryWithParser(pp_psatd, "By_lowfreq_cutoff_harmonic", By_lowfreq_cutoff_harmonic);
+        queryWithParser(pp_psatd, "Bz_lowfreq_cutoff_harmonic", Bz_lowfreq_cutoff_harmonic);
 
         if (m_v_comoving[0] != 0. || m_v_comoving[1] != 0. || m_v_comoving[2] != 0.) {
             AMREX_ALWAYS_ASSERT_WITH_MESSAGE(update_with_rho,

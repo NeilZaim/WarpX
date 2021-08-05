@@ -53,6 +53,10 @@ PMLPsatdAlgorithm::PMLPsatdAlgorithm(const SpectralKSpace& spectral_kspace,
     InitializeSpectralCoefficients(spectral_kspace, dm, dt);
 }
 
+void
+PMLPsatdAlgorithm::fillLowFreq(SpectralFieldData& f) const {
+}
+
 /* Advance the E and B field in spectral space (stored in `f`)
  * over one time step */
 void

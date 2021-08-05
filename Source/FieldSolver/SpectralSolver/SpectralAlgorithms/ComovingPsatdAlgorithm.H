@@ -43,6 +43,8 @@ class ComovingPsatdAlgorithm : public SpectralBaseAlgorithm
          */
         virtual void pushSpectralFields (SpectralFieldData& f) const override final;
 
+        virtual void fillLowFreq (SpectralFieldData& f) const override final;
+
         /* \brief Initialize the coefficients needed in the update equations
          */
         void InitializeSpectralCoefficients (const SpectralKSpace& spectral_kspace,

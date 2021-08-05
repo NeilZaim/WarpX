@@ -125,6 +125,15 @@ SpectralSolverRZ::pushSpectralFields () {
     algorithm->pushSpectralFields(field_data);
 }
 
+void
+SpectralSolverRZ::fillLowFreq () {
+    WARPX_PROFILE("SpectralSolverRZ::fillLowFreq");
+    // Virtual function: the actual function used here depends
+    // on the sub-class of `SpectralBaseAlgorithm` that was
+    // initialized in the constructor of `SpectralSolverRZ`
+    algorithm->fillLowFreq(field_data);
+}
+
 /**
   * \brief Public interface to call the member function ComputeSpectralDivE
   * of the base class SpectralBaseAlgorithmRZ from objects of class SpectralSolverRZ

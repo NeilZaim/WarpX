@@ -27,6 +27,8 @@ class GalileanPsatdAlgorithmRZ : public SpectralBaseAlgorithmRZ
         // Redefine functions from base class
         virtual void pushSpectralFields (SpectralFieldDataRZ & f) override final;
 
+        virtual void fillLowFreq (SpectralFieldDataRZ & f) override final;
+
         void InitializeSpectralCoefficients (SpectralFieldDataRZ const & f);
 
         /**

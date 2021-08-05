@@ -87,6 +87,8 @@ class PsatdAlgorithm : public SpectralBaseAlgorithm
          */
         virtual void pushSpectralFields (SpectralFieldData& f) const override final;
 
+        virtual void fillLowFreq (SpectralFieldData& f) const override final;
+
         /**
          * \brief Initializes the coefficients used in \c pushSpectralFields to update the E and B fields
          *

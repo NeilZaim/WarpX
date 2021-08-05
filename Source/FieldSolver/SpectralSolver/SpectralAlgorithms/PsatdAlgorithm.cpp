@@ -151,14 +151,8 @@ PsatdAlgorithm::PsatdAlgorithm(
 }
 
 void
-PsatdAlgorithm::pushSpectralFields (SpectralFieldData& f) const
+PsatdAlgorithm::fillLowFreq (SpectralFieldData& f) const
 {
-    const bool update_with_rho  = m_update_with_rho;
-    const bool time_averaging   = m_time_averaging;
-    const bool J_linear_in_time = m_J_linear_in_time;
-    const bool dive_cleaning    = m_dive_cleaning;
-    const bool divb_cleaning    = m_divb_cleaning;
-    const bool is_galilean      = m_is_galilean;
     const bool plot_Ex_lowfreq  = m_plot_Ex_lowfreq;
     const bool plot_Ey_lowfreq  = m_plot_Ey_lowfreq;
     const bool plot_Ez_lowfreq  = m_plot_Ez_lowfreq;
@@ -189,6 +183,102 @@ PsatdAlgorithm::pushSpectralFields (SpectralFieldData& f) const
     if (plot_Bz_lowfreq){
         Bz_lowfreq_threshold = std::pow(2._rt*MathConst::pi*m_Bz_lowfreq_cutoff_harmonic/m_Bz_lowfreq_fundamental_wavelength, 2);
     }
+
+    const SpectralFieldIndex& Idx = m_spectral_index;
+
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& bx = f.fields[mfi].box();
+
+        // Extract arrays for the fields to be updated
+        amrex::Array4<Complex> fields = f.fields[mfi].array();
+
+                // Extract pointers for the k vectors
+        const amrex::Real* modified_kx_arr = modified_kx_vec[mfi].dataPtr();
+#if (AMREX_SPACEDIM == 3)
+        const amrex::Real* modified_ky_arr = modified_ky_vec[mfi].dataPtr();
+#endif
+        const amrex::Real* modified_kz_arr = modified_kz_vec[mfi].dataPtr();
+
+        // Loop over indices within one box
+        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        {
+            // k vector values
+            const amrex::Real kx = modified_kx_arr[i];
+#if (AMREX_SPACEDIM == 3)
+            const amrex::Real ky = modified_ky_arr[j];
+            const amrex::Real kz = modified_kz_arr[k];
+#else
+            constexpr amrex::Real ky = 0._rt;
+            const     amrex::Real kz = modified_kz_arr[j];
+#endif
+            if (plot_Ex_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Ex_lowfreq_threshold){
+                    fields(i,j,k,Idx.Ex_lowfreq) = fields(i,j,k,Idx.Ex);
+                }
+                else {
+                    fields(i,j,k,Idx.Ex_lowfreq) = 0._rt*fields(i,j,k,Idx.Ex);
+                }
+            }
+            if (plot_Ey_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Ey_lowfreq_threshold){
+                    fields(i,j,k,Idx.Ey_lowfreq) = fields(i,j,k,Idx.Ey);
+                }
+                else {
+                    fields(i,j,k,Idx.Ey_lowfreq) = 0._rt*fields(i,j,k,Idx.Ey);
+                }
+            }
+            if (plot_Ez_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Ez_lowfreq_threshold){
+                    fields(i,j,k,Idx.Ez_lowfreq) = fields(i,j,k,Idx.Ez);
+                }
+                else {
+                    fields(i,j,k,Idx.Ez_lowfreq) = 0._rt*fields(i,j,k,Idx.Ez);
+                }
+            }
+            if (plot_Bx_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Bx_lowfreq_threshold){
+                    fields(i,j,k,Idx.Bx_lowfreq) = fields(i,j,k,Idx.Bx);
+                }
+                else {
+                    fields(i,j,k,Idx.Bx_lowfreq) = 0._rt*fields(i,j,k,Idx.Bx);
+                }
+            }
+            if (plot_By_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < By_lowfreq_threshold){
+                    fields(i,j,k,Idx.By_lowfreq) = fields(i,j,k,Idx.By);
+                }
+                else {
+                    fields(i,j,k,Idx.By_lowfreq) = 0._rt*fields(i,j,k,Idx.By);
+                }
+            }
+            if (plot_Bz_lowfreq)
+            {
+                if ((kx*kx + ky*ky + kz*kz) < Bz_lowfreq_threshold){
+                    fields(i,j,k,Idx.Bz_lowfreq) = fields(i,j,k,Idx.Bz);
+                }
+                else {
+                    fields(i,j,k,Idx.Bz_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
+                }
+            }
+        });
+    }
+}
+
+void
+PsatdAlgorithm::pushSpectralFields (SpectralFieldData& f) const
+{
+    const bool update_with_rho  = m_update_with_rho;
+    const bool time_averaging   = m_time_averaging;
+    const bool J_linear_in_time = m_J_linear_in_time;
+    const bool dive_cleaning    = m_dive_cleaning;
+    const bool divb_cleaning    = m_divb_cleaning;
+    const bool is_galilean      = m_is_galilean;
 
     const amrex::Real dt = m_dt;
 
@@ -480,61 +570,6 @@ PsatdAlgorithm::pushSpectralFields (SpectralFieldData& f) const
                 fields(i,j,k,Idx.Bz_avg) = Psi1 * Bz_old
                                            + I * Psi2 * (kx * Ey_old - ky * Ex_old)
                                            + I * Y1 * (kx * Jy - ky * Jx);
-            }
-
-            if (plot_Ex_lowfreq)
-            {
-                if ((kx*kx + ky*ky + kz*kz) < Ex_lowfreq_threshold){
-                    fields(i,j,k,Idx.Ex_lowfreq) = fields(i,j,k,Idx.Ex);
-                }
-                else {
-                    fields(i,j,k,Idx.Ex_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
-                }
-            }
-            if (plot_Ey_lowfreq)
-            {
-                if ((kx*kx + ky*ky + kz*kz) < Ey_lowfreq_threshold){
-                    fields(i,j,k,Idx.Ey_lowfreq) = fields(i,j,k,Idx.Ey);
-                }
-                else {
-                    fields(i,j,k,Idx.Ey_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
-                }
-            }
-            if (plot_Ez_lowfreq)
-            {
-                if ((kx*kx + ky*ky + kz*kz) < Ez_lowfreq_threshold){
-                    fields(i,j,k,Idx.Ez_lowfreq) = fields(i,j,k,Idx.Ez);
-                }
-                else {
-                    fields(i,j,k,Idx.Ez_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
-                }
-            }
-            if (plot_Bx_lowfreq)
-            {
-                if ((kx*kx + ky*ky + kz*kz) < Bx_lowfreq_threshold){
-                    fields(i,j,k,Idx.Bx_lowfreq) = fields(i,j,k,Idx.Bx);
-                }
-                else {
-                    fields(i,j,k,Idx.Bx_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
-                }
-            }
-            if (plot_By_lowfreq)
-            {
-                if ((kx*kx + ky*ky + kz*kz) < By_lowfreq_threshold){
-                    fields(i,j,k,Idx.By_lowfreq) = fields(i,j,k,Idx.By);
-                }
-                else {
-                    fields(i,j,k,Idx.By_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
-                }
-            }
-            if (plot_Bz_lowfreq)
-            {
-                if ((kx*kx + ky*ky + kz*kz) < Bz_lowfreq_threshold){
-                    fields(i,j,k,Idx.Bz_lowfreq) = fields(i,j,k,Idx.Bz);
-                }
-                else {
-                    fields(i,j,k,Idx.Bz_lowfreq) = 0._rt*fields(i,j,k,Idx.Bz);
-                }
             }
 
         });

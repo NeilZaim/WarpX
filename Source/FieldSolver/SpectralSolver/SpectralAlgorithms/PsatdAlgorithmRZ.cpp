@@ -50,6 +50,11 @@ PsatdAlgorithmRZ::PsatdAlgorithmRZ (SpectralKSpaceRZ const & spectral_kspace,
     amrex::ignore_unused(m_time_averaging);
 }
 
+void
+PsatdAlgorithmRZ::fillLowFreq(SpectralFieldDataRZ & f)
+{
+}
+
 /* Advance the E and B field in spectral space (stored in `f`)
  * over one time step */
 void

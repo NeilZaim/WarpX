@@ -45,6 +45,12 @@ GalileanPsatdAlgorithmRZ::GalileanPsatdAlgorithmRZ (SpectralKSpaceRZ const & spe
     coefficients_initialized = false;
 }
 
+void
+GalileanPsatdAlgorithmRZ::fillLowFreq (SpectralFieldDataRZ & f)
+{
+}
+
+
 /* Advance the E and B field in spectral space (stored in `f`)
  * over one time step
  * The algorithm is described in https://doi.org/10.1103/PhysRevE.94.053305

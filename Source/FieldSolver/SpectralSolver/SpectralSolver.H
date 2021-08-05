@@ -125,6 +125,8 @@ class SpectralSolver
          */
         void pushSpectralFields();
 
+        void fillLowFreq();
+
         /**
           * \brief Public interface to call the member function ComputeSpectralDivE
           * of the base class SpectralBaseAlgorithm from objects of class SpectralSolver

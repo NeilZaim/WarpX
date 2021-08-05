@@ -526,6 +526,7 @@ public:
     // Fill boundary cells including coarse/fine boundaries
     void FillBoundaryB   (amrex::IntVect ng);
     void FillBoundaryE   (amrex::IntVect ng);
+    void FillBoundaryLowFreq   (amrex::IntVect ng);
     void FillBoundaryB_avg   (amrex::IntVect ng);
     void FillBoundaryE_avg   (amrex::IntVect ng);
 
@@ -533,6 +534,7 @@ public:
     void FillBoundaryG   (amrex::IntVect ng);
     void FillBoundaryAux (amrex::IntVect ng);
     void FillBoundaryE   (int lev, amrex::IntVect ng);
+    void FillBoundaryLowFreq   (int lev, amrex::IntVect ng);
     void FillBoundaryB   (int lev, amrex::IntVect ng);
     void FillBoundaryE_avg   (int lev, amrex::IntVect ng);
     void FillBoundaryB_avg   (int lev, amrex::IntVect ng);
@@ -801,6 +803,7 @@ private:
 
     void FillBoundaryB (int lev, PatchType patch_type, amrex::IntVect ng);
     void FillBoundaryE (int lev, PatchType patch_type, amrex::IntVect ng);
+    void FillBoundaryLowFreq (int lev, PatchType patch_type, amrex::IntVect ng);
     void FillBoundaryF (int lev, PatchType patch_type, amrex::IntVect ng);
     void FillBoundaryG (int lev, PatchType patch_type, amrex::IntVect ng);
 
@@ -1210,6 +1213,8 @@ private:
 
     void PushPSATD ();
 
+    void FillLowFreq ();
+
 #ifdef WARPX_USE_PSATD
 
     /**
@@ -1222,6 +1227,8 @@ private:
      *        with field damping in the guard cells (if needed)
      */
     void PSATDBackwardTransformEB ();
+
+    void PSATDBackwardTransformLowFreq ();
 
     /**
      * \brief Backward FFT of averaged E,B on all mesh refinement levels
@@ -1276,6 +1283,8 @@ private:
      * \brief Update all necessary fields in spectral space
      */
     void PSATDPushSpectralFields ();
+
+    void PSATDFillLowFreq ();
 
     /**
      * \brief Scale averaged E,B fields to account for time integration

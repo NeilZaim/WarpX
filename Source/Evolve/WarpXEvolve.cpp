@@ -397,6 +397,8 @@ WarpX::OneStep_nosub (Real cur_time)
         PushPSATD();
         FillBoundaryE(guard_cells.ng_alloc_EB);
         FillBoundaryB(guard_cells.ng_alloc_EB);
+        FillLowFreq();
+        FillBoundaryLowFreq(guard_cells.ng_alloc_EB);
 
         if (use_hybrid_QED) {
             WarpX::Hybrid_QED_Push(dt);

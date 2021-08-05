@@ -63,6 +63,12 @@ ComovingPsatdAlgorithm::ComovingPsatdAlgorithm (const SpectralKSpace& spectral_k
     InitializeSpectralCoefficients(spectral_kspace, dm, dt);
 }
 
+
+void
+ComovingPsatdAlgorithm::fillLowFreq (SpectralFieldData& f) const
+{
+}
+
 void
 ComovingPsatdAlgorithm::pushSpectralFields (SpectralFieldData& f) const
 {

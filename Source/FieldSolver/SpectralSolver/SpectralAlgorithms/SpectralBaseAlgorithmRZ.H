@@ -23,6 +23,8 @@ class SpectralBaseAlgorithmRZ
         // Virtual member function ; meant to be overridden in subclasses
         virtual void pushSpectralFields(SpectralFieldDataRZ & f) = 0;
 
+        virtual void fillLowFreq(SpectralFieldDataRZ & f) = 0;
+
         // The destructor should also be a virtual function, so that
         // a pointer to subclass of `SpectraBaseAlgorithm` actually
         // calls the subclass's destructor.

@@ -129,4 +129,13 @@ SpectralSolver::pushSpectralFields(){
     algorithm->pushSpectralFields( field_data );
 }
 
+void
+SpectralSolver::fillLowFreq(){
+    WARPX_PROFILE("SpectralSolver::fillLowFreq");
+    // Virtual function: the actual function used here depends
+    // on the sub-class of `SpectralBaseAlgorithm` that was
+    // initialized in the constructor of `SpectralSolver`
+    algorithm->fillLowFreq( field_data );
+}
+
 #endif // WARPX_USE_PSATD

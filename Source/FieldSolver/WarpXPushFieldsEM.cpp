@@ -114,38 +114,53 @@ WarpX::PSATDForwardTransformEB ()
 }
 
 void
-WarpX::PSATDBackwardTransformEB ()
+WarpX::PSATDBackwardTransformLowFreq ()
 {
+
     const SpectralFieldIndex& Idx = spectral_solver_fp[0]->m_spectral_index;
 
     for (int lev = 0; lev <= finest_level; ++lev)
     {
-        BackwardTransformVect(lev, *spectral_solver_fp[lev], Efield_fp[lev], Idx.Ex, Idx.Ey, Idx.Ez);
-        BackwardTransformVect(lev, *spectral_solver_fp[lev], Bfield_fp[lev], Idx.Bx, Idx.By, Idx.Bz);
-
-        if (spectral_solver_cp[lev])
-        {
-            BackwardTransformVect(lev, *spectral_solver_cp[lev], Efield_cp[lev], Idx.Ex, Idx.Ey, Idx.Ez);
-            BackwardTransformVect(lev, *spectral_solver_cp[lev], Bfield_cp[lev], Idx.Bx, Idx.By, Idx.Bz);
-        }
-
         if (plot_Ex_lowfreq){
+            amrex::Print() << "Ex_lowfreq BT \n";
             spectral_solver_fp[lev]->BackwardTransform(lev, *Ex_lowfreq_fp[lev], Idx.Ex_lowfreq);
         }
         if (plot_Ey_lowfreq){
             spectral_solver_fp[lev]->BackwardTransform(lev, *Ey_lowfreq_fp[lev], Idx.Ey_lowfreq);
         }
         if (plot_Ez_lowfreq){
+            amrex::Print() << "Ez_lowfreq BT \n";
             spectral_solver_fp[lev]->BackwardTransform(lev, *Ez_lowfreq_fp[lev], Idx.Ez_lowfreq);
         }
         if (plot_Bx_lowfreq){
             spectral_solver_fp[lev]->BackwardTransform(lev, *Bx_lowfreq_fp[lev], Idx.Bx_lowfreq);
         }
         if (plot_By_lowfreq){
+            amrex::Print() << "By_lowfreq BT \n";
             spectral_solver_fp[lev]->BackwardTransform(lev, *By_lowfreq_fp[lev], Idx.By_lowfreq);
         }
         if (plot_Bz_lowfreq){
             spectral_solver_fp[lev]->BackwardTransform(lev, *Bz_lowfreq_fp[lev], Idx.Bz_lowfreq);
+        }
+    }
+}
+
+void
+WarpX::PSATDBackwardTransformEB ()
+{
+    const SpectralFieldIndex& Idx = spectral_solver_fp[0]->m_spectral_index;
+
+    for (int lev = 0; lev <= finest_level; ++lev)
+    {
+        amrex::Print() << "E BT \n";
+        BackwardTransformVect(lev, *spectral_solver_fp[lev], Efield_fp[lev], Idx.Ex, Idx.Ey, Idx.Ez);
+        amrex::Print() << "B BT \n";
+        BackwardTransformVect(lev, *spectral_solver_fp[lev], Bfield_fp[lev], Idx.Bx, Idx.By, Idx.Bz);
+
+        if (spectral_solver_cp[lev])
+        {
+            BackwardTransformVect(lev, *spectral_solver_cp[lev], Efield_cp[lev], Idx.Ex, Idx.Ey, Idx.Ez);
+            BackwardTransformVect(lev, *spectral_solver_cp[lev], Bfield_cp[lev], Idx.Bx, Idx.By, Idx.Bz);
         }
     }
 
@@ -332,6 +347,15 @@ WarpX::PSATDPushSpectralFields ()
 }
 
 void
+WarpX::PSATDFillLowFreq ()
+{
+    for (int lev = 0; lev <= finest_level; ++lev)
+    {
+        spectral_solver_fp[lev]->fillLowFreq();
+    }
+}
+
+void
 WarpX::PSATDMoveRhoNewToRhoOld ()
 {
     const SpectralFieldIndex& Idx = spectral_solver_fp[0]->m_spectral_index;
@@ -447,6 +471,19 @@ WarpX::PushPSATD ()
         ApplyBfieldBoundary(lev, PatchType::fine, DtType::FirstHalf);
         if (lev > 0) ApplyBfieldBoundary(lev, PatchType::coarse, DtType::FirstHalf);
     }
+#endif
+}
+
+void
+WarpX::FillLowFreq ()
+{
+#ifndef WARPX_USE_PSATD
+    amrex::Abort("PushFieldsEM: PSATD solver selected but not built");
+#else
+
+    PSATDForwardTransformEB();
+    PSATDFillLowFreq();
+    PSATDBackwardTransformLowFreq();
 #endif
 }
 

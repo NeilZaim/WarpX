@@ -539,6 +539,15 @@ WarpX::FillBoundaryE (IntVect ng)
 }
 
 void
+WarpX::FillBoundaryLowFreq (IntVect ng)
+{
+    for (int lev = 0; lev <= finest_level; ++lev)
+    {
+        FillBoundaryLowFreq(lev, ng);
+    }
+}
+
+void
 WarpX::FillBoundaryF (IntVect ng)
 {
     for (int lev = 0; lev <= finest_level; ++lev)
@@ -583,6 +592,28 @@ WarpX::FillBoundaryE(int lev, IntVect ng)
 }
 
 void
+WarpX::FillBoundaryLowFreq(int lev, IntVect ng)
+{
+    FillBoundaryLowFreq(lev, PatchType::fine, ng);
+    if (lev > 0) FillBoundaryLowFreq(lev, PatchType::coarse, ng);
+}
+
+void
+WarpX::FillBoundaryLowFreq (int lev, PatchType patch_type, IntVect ng)
+{
+    if (patch_type == PatchType::fine)
+    {
+        const auto& period = Geom(lev).periodicity();
+        if (plot_Ex_lowfreq) {Ex_lowfreq_fp[lev]->FillBoundary(ng, period);}
+        if (plot_Ey_lowfreq) {Ey_lowfreq_fp[lev]->FillBoundary(ng, period);}
+        if (plot_Ez_lowfreq) {Ez_lowfreq_fp[lev]->FillBoundary(ng, period);}
+        if (plot_Bx_lowfreq) {Bx_lowfreq_fp[lev]->FillBoundary(ng, period);}
+        if (plot_By_lowfreq) {By_lowfreq_fp[lev]->FillBoundary(ng, period);}
+        if (plot_Bz_lowfreq) {Bz_lowfreq_fp[lev]->FillBoundary(ng, period);}
+    }
+}
+
+void
 WarpX::FillBoundaryE (int lev, PatchType patch_type, IntVect ng)
 {
     if (patch_type == PatchType::fine)
@@ -608,9 +639,6 @@ WarpX::FillBoundaryE (int lev, PatchType patch_type, IntVect ng)
             Efield_fp[lev][0]->FillBoundary(ng, period);
             Efield_fp[lev][1]->FillBoundary(ng, period);
             Efield_fp[lev][2]->FillBoundary(ng, period);
-            if (plot_Ex_lowfreq) {Ex_lowfreq_fp[lev]->FillBoundary(ng, period);}
-            if (plot_Ey_lowfreq) {Ey_lowfreq_fp[lev]->FillBoundary(ng, period);}
-            if (plot_Ez_lowfreq) {Ez_lowfreq_fp[lev]->FillBoundary(ng, period);}
         }
     }
     else if (patch_type == PatchType::coarse)
@@ -672,9 +700,6 @@ WarpX::FillBoundaryB (int lev, PatchType patch_type, IntVect ng)
             Bfield_fp[lev][0]->FillBoundary(ng, period);
             Bfield_fp[lev][1]->FillBoundary(ng, period);
             Bfield_fp[lev][2]->FillBoundary(ng, period);
-            if (plot_Bx_lowfreq) {Bx_lowfreq_fp[lev]->FillBoundary(ng, period);}
-            if (plot_By_lowfreq) {By_lowfreq_fp[lev]->FillBoundary(ng, period);}
-            if (plot_Bz_lowfreq) {Bz_lowfreq_fp[lev]->FillBoundary(ng, period);}
         }
     }
     else if (patch_type == PatchType::coarse)

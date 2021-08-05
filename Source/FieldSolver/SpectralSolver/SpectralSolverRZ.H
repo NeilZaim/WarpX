@@ -65,6 +65,8 @@ class SpectralSolverRZ
         /* \brief Update the fields in spectral space, over one timestep */
         void pushSpectralFields ();
 
+        void fillLowFreq ();
+
         /* \brief Initialize K space filtering arrays */
         void InitFilter (amrex::IntVect const & filter_npass_each_dir,
                          bool const compensation)
