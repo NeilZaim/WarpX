@@ -165,6 +165,11 @@ WarpX::Evolve (int numsteps)
         mypc->doQEDSchwinger();
 #endif
 
+        if(step == WarpX::timestep_freeze)
+        {
+            mypc->unfreeze();
+        }
+
         // Main PIC operation:
         // gather fields, push particles, deposit sources, update fields
 

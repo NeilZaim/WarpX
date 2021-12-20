@@ -142,6 +142,8 @@ public:
                          const amrex::MultiFab* cBx, const amrex::MultiFab* cBy, const amrex::MultiFab* cBz,
                          amrex::Real t, amrex::Real dt, DtType a_dt_type=DtType::Full, bool skip_deposition=false) = 0;
 
+    virtual void unfreeze () = 0;
+
     virtual void PostRestart () = 0;
 
     virtual void GetParticleSlice(const int /*direction*/, const amrex::Real /*z_old*/,

@@ -307,6 +307,10 @@ public:
     */
     void resample (const int timestep) override final;
 
+    bool m_frozen = true;
+
+    virtual void unfreeze () override {m_frozen = false;};
+
 #ifdef WARPX_QED
     //Functions decleared in WarpXParticleContainer.H
     //containers for which QED processes could be relevant

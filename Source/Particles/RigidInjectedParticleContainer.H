@@ -80,6 +80,8 @@ public:
                          DtType a_dt_type=DtType::Full,
                          bool skip_deposition=false ) override;
 
+    virtual void unfreeze () override {}
+
     virtual void PushPX (WarpXParIter& pti,
                          amrex::FArrayBox const * exfab,
                          amrex::FArrayBox const * eyfab,

@@ -1596,6 +1596,9 @@ PhysicalParticleContainer::Evolve (int lev,
     WARPX_PROFILE("PhysicalParticleContainer::Evolve()");
     WARPX_PROFILE_VAR_NS("PhysicalParticleContainer::Evolve::GatherAndPush", blp_fg);
 
+    if (m_frozen)
+        {return;}
+
     BL_ASSERT(OnSameGrids(lev,jx));
 
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);

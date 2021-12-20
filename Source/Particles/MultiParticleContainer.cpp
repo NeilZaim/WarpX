@@ -433,6 +433,14 @@ MultiParticleContainer::Evolve (int lev,
 }
 
 void
+MultiParticleContainer::unfreeze ()
+{
+    for (auto& pc : allcontainers) {
+        pc->unfreeze();
+    }
+}
+
+void
 MultiParticleContainer::PushX (Real dt)
 {
     for (auto& pc : allcontainers) {

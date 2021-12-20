@@ -60,6 +60,8 @@ public:
                          amrex::Real t, amrex::Real dt, DtType a_dt_type=DtType::Full,
                          bool skip_deposition=false) final;
 
+    virtual void unfreeze () final {}
+
     virtual void PushP (int lev, amrex::Real dt,
                         const amrex::MultiFab& ,
                         const amrex::MultiFab& ,

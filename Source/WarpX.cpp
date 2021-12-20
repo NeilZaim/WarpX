@@ -98,6 +98,7 @@ int WarpX::start_moving_window_step = 0;
 int WarpX::end_moving_window_step = -1;
 int WarpX::moving_window_dir = -1;
 Real WarpX::moving_window_v = std::numeric_limits<amrex::Real>::max();
+int WarpX::timestep_freeze = 0;
 
 bool WarpX::fft_do_time_averaging = false;
 
@@ -552,6 +553,7 @@ WarpX::ReadParameters ()
             queryWithParser(pp_warpx, "zmax_plasma_to_compute_max_step",
                       zmax_plasma_to_compute_max_step);
 
+        getWithParser(pp_warpx, "timestep_freeze", timestep_freeze);
         pp_warpx.query("do_moving_window", do_moving_window);
         if (do_moving_window)
         {
