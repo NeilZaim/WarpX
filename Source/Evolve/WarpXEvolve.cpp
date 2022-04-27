@@ -174,6 +174,8 @@ WarpX::Evolve (int numsteps)
         // Main PIC operation:
         // gather fields, push particles, deposit sources, update fields
 
+        ActivateParticlePush(step+1);
+
         ExecutePythonCallback("particleinjection");
         // Electrostatic case: only gather fields and push particles,
         // deposition and calculation of fields done further below
@@ -851,6 +853,12 @@ WarpX::PushParticlesandDepose (amrex::Real cur_time, bool skip_deposition)
     for (int lev = 0; lev <= finest_level; ++lev) {
         PushParticlesandDepose(lev, cur_time, DtType::Full, skip_deposition);
     }
+}
+
+void
+WarpX::ActivateParticlePush (int step)
+{
+    mypc->ActivateParticlePush(step);
 }
 
 void

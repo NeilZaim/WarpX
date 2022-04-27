@@ -1086,3 +1086,12 @@ WarpXParticleContainer::ApplyBoundaryConditions (){
         }
     }
 }
+
+void
+WarpXParticleContainer::ActivateParticlePush (int step)
+{
+    if (step == start_push_step)
+    {
+        do_not_push = 0;
+    }
+}

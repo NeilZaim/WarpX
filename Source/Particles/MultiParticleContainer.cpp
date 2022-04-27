@@ -440,6 +440,14 @@ MultiParticleContainer::Evolve (int lev,
 }
 
 void
+MultiParticleContainer::ActivateParticlePush (int step)
+{
+    for (auto& pc : allcontainers) {
+        pc->ActivateParticlePush(step);
+    }
+}
+
+void
 MultiParticleContainer::PushX (Real dt)
 {
     for (auto& pc : allcontainers) {

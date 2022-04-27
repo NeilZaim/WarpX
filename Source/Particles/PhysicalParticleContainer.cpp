@@ -238,6 +238,14 @@ PhysicalParticleContainer::PhysicalParticleContainer (AmrCore* amr_core, int isp
     pp_species_name.query("do_not_deposit", do_not_deposit);
     pp_species_name.query("do_not_gather", do_not_gather);
     pp_species_name.query("do_not_push", do_not_push);
+    if (do_not_push == 0)
+    {
+        pp_species_name.query("start_push_step", start_push_step);
+        if (start_push_step > 0)
+        {
+            do_not_push = 1;
+        }
+    }
 
     pp_species_name.query("do_continuous_injection", do_continuous_injection);
     pp_species_name.query("initialize_self_fields", initialize_self_fields);

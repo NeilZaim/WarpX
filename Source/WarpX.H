@@ -657,6 +657,8 @@ public:
     void PushParticlesandDepose (int lev, amrex::Real cur_time, DtType a_dt_type=DtType::Full, bool skip_current=false);
     void PushParticlesandDepose (         amrex::Real cur_time, bool skip_current=false);
 
+    void ActivateParticlePush (int step);
+
     // This function does aux(lev) = fp(lev) + I(aux(lev-1)-cp(lev)).
     // Caller must make sure fp and cp have ghost cells filled.
     void UpdateAuxilaryData ();
