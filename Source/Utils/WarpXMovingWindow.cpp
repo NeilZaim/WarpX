@@ -288,6 +288,7 @@ WarpX::MoveWindow (const int step, bool move_j)
             // in mypc.
             mypc->ContinuousInjection(particleBox);
             current_injection_position = new_injection_position;
+            mypc->Redistribute();
         }
     }
 
