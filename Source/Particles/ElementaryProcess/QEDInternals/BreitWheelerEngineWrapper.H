@@ -173,11 +173,16 @@ public:
             chi_phot < m_bw_minimum_chi_phot)
             return 0;
 
+        const amrex::ParticleReal opt_depth_old = opt_depth;
+
         const auto is_out = pxr_bw::evolve_optical_depth<
             amrex::ParticleReal,
             BW_dndt_table_view,
             pxr_p::unit_system::SI>(
                 energy, chi_phot, dt, opt_depth, m_table_view);
+
+        constexpr amrex::ParticleReal two_thirds = amrex::ParticleReal(2.)/amrex::ParticleReal(3.);
+        opt_depth = opt_depth - (opt_depth_old-opt_depth)*PhysConst::alpha*std::pow(chi_phot,two_thirds);
 
         return is_out;
     }
